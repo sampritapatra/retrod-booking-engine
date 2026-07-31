@@ -1,0 +1,86 @@
+/* Retrod Booking Engine Base & Global Styles */
+:root {
+    --primary: #111827;
+    --primary-hover: #1f2937;
+    --brand-blue: #2563eb;
+    --success-green: #16a34a;
+    --success-bg: #f0fdf4;
+    --danger-red: #ef4444;
+    --bg-main: #f8fafc;
+    --card-bg: #ffffff;
+    --text-dark: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+/* Themes */
+body.theme-ocean {
+    --bg-main: #7dd3fc;          /* Richer sky blue background */
+    --card-bg: #ffffff;          /* Pure white card surface */
+    --text-dark: #0f172a;        /* Default dark text */
+    --text-muted: #334155;       /* Muted text */
+    --border-color: #38bdf8;     /* Sky border */
+    --primary: #0284c7;          /* Sky blue accent */
+    --primary-hover: #0369a1;
+}
+
+body.theme-forest {
+    --bg-main: #86efac;          /* Richer green background */
+    --card-bg: #ffffff;          /* Pure white card surface */
+    --text-dark: #0f172a;        /* Default dark text */
+    --text-muted: #334155;       /* Muted text */
+    --border-color: #4ade80;     /* Mint green border */
+    --primary: #16a34a;          /* Forest green accent */
+    --primary-hover: #15803d;
+}
+
+body.theme-peach {
+    --bg-main: #ffedd5;          /* Light peach background tint */
+    --card-bg: #ffffff;          /* Pure white card surface */
+    --text-dark: #0f172a;        /* Default dark text */
+    --text-muted: #64748b;       /* Default muted text */
+    --border-color: #fed7aa;     /* Soft peach border */
+    --primary: #ea580c;          /* Peach/orange accent */
+    --primary-hover: #c2410c;
+}
+
+body.dark-theme {
+    --bg-main: #0f172a;          /* Soft slate dark background (not pitch black) */
+    --card-bg: #1e293b;          /* Soft slate dark card surface */
+    --text-dark: #f8fafc;        /* High-contrast crisp white text */
+    --text-muted: #94a3b8;       /* Soft slate muted text */
+    --border-color: #334155;     /* Smooth dark border */
+    --primary: #6366f1;          /* Indigo accent for dark mode */
+    --primary-hover: #4f46e5;
+}
+
+/* Reset & Global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.hidden {
+    display: none !important;
+}
