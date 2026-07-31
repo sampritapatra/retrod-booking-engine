@@ -248,7 +248,6 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                                             <div style={{ fontSize: '11px', fontWeight: 800, color: '#16a34a', display: 'flex', alignItems: 'center', gap: '4px' }}>
                                                 👑 EXCLUSIVE OFFER <span style={{ background: '#16a34a', color: '#fff', padding: '1px 6px', borderRadius: '4px', fontSize: '10px' }}>14% Off</span>
                                                 <Tooltip
-                                                    onClick={() => openModal('offer-info', room.id, plan.id)}
                                                     text={<>
                                                         <strong style={{ display: 'block', color: '#fbbf24', fontSize: '12px', marginBottom: '4px' }}>👑 14% Off — Direct Web Offer</strong>
                                                         Valid till 31 Dec 2026. For direct web bookings only. Non-transferable.

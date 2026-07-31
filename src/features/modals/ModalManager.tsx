@@ -6,7 +6,6 @@ import { RateDetailsModal } from './RateDetailsModal';
 import { RoomDetailsModal } from './RoomDetailsModal';
 import { MyBookingModal } from './MyBookingModal';
 import { ReservationRequestsModal } from './ReservationRequestsModal';
-import { OfferInfoModal } from './OfferInfoModal';
 import { EventBookingModal } from '../events/EventBookingModal';
 
 export const ModalManager: React.FC = () => {
@@ -28,8 +27,6 @@ export const ModalManager: React.FC = () => {
             return <MyBookingModal />;
         case 'reservation-requests':
             return <ReservationRequestsModal />;
-        case 'offer-info':
-            return <OfferInfoModal />;
         case 'event-booking':
             return <EventBookingModal />;
         default:
