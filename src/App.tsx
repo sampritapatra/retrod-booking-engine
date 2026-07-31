@@ -36,7 +36,7 @@ const MainLayout: React.FC = () => {
 
     return (
         <div className="app-root">
-            {currentView !== 'checkout' && currentView !== 'payment' && <Header />}
+            {currentView !== 'checkout' && <Header />}
 
             <main className="main-content container" style={{ minHeight: 'calc(100vh - 350px)' }}>
                 {currentView === 'main' && (
