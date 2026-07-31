@@ -94,7 +94,10 @@ export const EventBookingView: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!isFormValid) return;
+        if (!isFormValid) {
+            alert('⚠️ Please fill in all mandatory fields marked with a red star (*):\n• Event Start Date & End Date\n• Organizer Name\n• Phone Number\n• Email Address');
+            return;
+        }
 
         setIsSubmitting(true);
 
@@ -315,30 +318,32 @@ export const EventBookingView: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* SUBMIT BUTTON - HIDDEN / DISABLED UNTIL MANDATORY FIELDS ARE FILLED */}
-                    {isFormValid ? (
-                        <button 
-                            type="submit" 
-                            disabled={isSubmitting} 
-                            style={{ 
-                                width: '100%', 
-                                background: '#16a34a', 
-                                color: '#fff', 
-                                border: 'none', 
-                                padding: '16px', 
-                                borderRadius: '12px', 
-                                fontSize: '16px', 
-                                fontWeight: 800, 
-                                cursor: 'pointer', 
-                                boxShadow: '0 4px 14px rgba(22,163,74,0.35)',
-                                transition: 'all 0.2s ease'
-                            }}
-                        >
-                            {isSubmitting ? 'Submitting Reservation Request...' : 'Submit Event Request →'}
-                        </button>
-                    ) : (
-                        <div style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', color: '#dc2626', padding: '12px', borderRadius: '10px', fontSize: '12px', fontWeight: 700, textAlign: 'center' }}>
-                            * Please fill in all mandatory fields marked with a red star (*) to activate the Submit button.
+                    {/* SUBMIT BUTTON - ALWAYS VISIBLE */}
+                    <button 
+                        type="submit" 
+                        disabled={isSubmitting} 
+                        style={{ 
+                            width: '100%', 
+                            background: isFormValid ? '#16a34a' : '#15803d', 
+                            opacity: isFormValid ? 1 : 0.8,
+                            color: '#ffffff', 
+                            border: 'none', 
+                            padding: '16px', 
+                            borderRadius: '12px', 
+                            fontSize: '16px', 
+                            fontWeight: 800, 
+                            cursor: 'pointer', 
+                            boxShadow: '0 4px 14px rgba(22,163,74,0.35)',
+                            transition: 'all 0.2s ease',
+                            marginBottom: '10px'
+                        }}
+                    >
+                        {isSubmitting ? 'Submitting Reservation Request...' : 'Submit Event Request →'}
+                    </button>
+
+                    {!isFormValid && (
+                        <div style={{ fontSize: '11px', color: '#ef4444', fontWeight: 700, textAlign: 'center' }}>
+                            * Mandatory fields marked with red star (*) must be filled before submitting.
                         </div>
                     )}
                 </form>
