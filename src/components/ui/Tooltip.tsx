@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 interface TooltipProps {
     text: React.ReactNode;
@@ -8,6 +8,35 @@ interface TooltipProps {
 
 export const Tooltip: React.FC<TooltipProps> = ({ text, onClick, alignRight = false }) => {
     const [hovered, setHovered] = useState(false);
+    const isTouchRef = useRef(false);
+
+    const handleMouseEnter = () => {
+        if (!isTouchRef.current) {
+            setHovered(true);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (!isTouchRef.current) {
+            setHovered(false);
+        }
+    };
+
+    const handleTouchStart = () => {
+        isTouchRef.current = true;
+    };
+
+    const handleClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (onClick) {
+            onClick(e);
+        } else {
+            setHovered(prev => !prev);
+        }
+        setTimeout(() => {
+            isTouchRef.current = false;
+        }, 500);
+    };
 
     return (
         <span 
@@ -21,16 +50,10 @@ export const Tooltip: React.FC<TooltipProps> = ({ text, onClick, alignRight = fa
                 verticalAlign: 'middle',
                 zIndex: hovered ? 99999 : 1
             }}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            onClick={(e) => {
-                if (onClick) {
-                    e.stopPropagation();
-                    onClick(e);
-                } else {
-                    setHovered(prev => !prev);
-                }
-            }}
+            onTouchStart={handleTouchStart}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onClick={handleClick}
         >
             <span 
                 className="info-tip-icon" 
