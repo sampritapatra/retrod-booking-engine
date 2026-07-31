@@ -5248,7 +5248,7 @@ body.dark-theme .info-tip-box {
     }
 
     .plan-full-details.expanded {
-        display: block;
+        display: block !important;
     }
 
     .plan-pricing-col {
@@ -5645,5 +5645,41 @@ body.dark-theme .info-tip-box {
 
     100% {
         background-position: 200% 50%;
+    }
+}
+
+/* ── BANQUET & EVENT BOOKING RESPONSIVE STYLES ── */
+.event-booking-grid {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 28px;
+}
+
+.event-form-row-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+    .event-booking-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .event-form-row-2col {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .event-addon-option-label {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+    }
+
+    .event-booking-view-container {
+        padding: 12px 10px 40px 10px !important;
     }
 }

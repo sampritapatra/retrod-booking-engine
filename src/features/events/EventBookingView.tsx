@@ -138,7 +138,7 @@ export const EventBookingView: React.FC = () => {
                 </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: '28px' }}>
+            <div className="event-booking-grid">
                 {/* FORM PANEL */}
                 <form onSubmit={handleSubmit} style={{ background: '#fff', border: '1.5px solid #cbd5e1', borderRadius: '16px', padding: '28px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
                     <div style={{ marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
@@ -153,7 +153,7 @@ export const EventBookingView: React.FC = () => {
                     {/* 1. VENUE & GUEST CAPACITY */}
                     <div style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', padding: '16px', borderRadius: '12px', marginBottom: '20px' }}>
                         <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', margin: '0 0 12px 0' }}>1. Venue &amp; Guest Capacity</h4>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                        <div className="event-form-row-2col">
                             <div>
                                 <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#334155', marginBottom: '6px', letterSpacing: '0.5px' }}>
                                     BANQUET HALLS REQUIRED <span style={{ color: '#ef4444' }}>*</span>
@@ -196,7 +196,7 @@ export const EventBookingView: React.FC = () => {
                     {/* 2. EVENT DATES */}
                     <div style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', padding: '16px', borderRadius: '12px', marginBottom: '20px' }}>
                         <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', margin: '0 0 12px 0' }}>2. Event Duration</h4>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <div className="event-form-row-2col">
                             <div>
                                 <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#334155', marginBottom: '6px', letterSpacing: '0.5px' }}>
                                     EVENT START DATE <span style={{ color: '#ef4444' }}>*</span>
@@ -285,7 +285,7 @@ export const EventBookingView: React.FC = () => {
                     {/* 5. ORGANIZER CONTACT DETAILS */}
                     <div style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', padding: '16px', borderRadius: '12px', marginBottom: '24px' }}>
                         <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', margin: '0 0 12px 0' }}>5. Organizer Details</h4>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                        <div className="event-form-row-2col">
                             <div>
                                 <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#334155', marginBottom: '6px', letterSpacing: '0.5px' }}>
                                     ORGANIZER NAME <span style={{ color: '#ef4444' }}>*</span>
