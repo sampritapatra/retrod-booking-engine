@@ -187,11 +187,33 @@ export const DateRangePicker: React.FC = () => {
                     <button
                         type="button"
                         onClick={handleOpenCalendar}
-                        style={{ background: '#fff', border: '1.5px solid #cbd5e1', borderRadius: '8px', padding: '10px 18px', fontSize: '14px', fontWeight: 700, color: '#0f172a', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.04)' }}
+                        style={{
+                            background: '#fff',
+                            border: '1.5px solid #cbd5e1',
+                            borderRadius: '10px',
+                            padding: '8px 16px',
+                            fontSize: '13px',
+                            fontWeight: 700,
+                            color: '#0f172a',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.04)',
+                            textAlign: 'left'
+                        }}
                     >
-                        <span>📅</span>
-                        <span>{formatDisplayDate(checkInDate)} – {formatDisplayDate(checkOutDate)} ({totalNights} Night{totalNights > 1 ? 's' : ''})</span>
-                        <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: 800 }}>Change Dates v</span>
+                        <span style={{ fontSize: '18px' }}>📅</span>
+                        <div>
+                            <div style={{ fontSize: '13px', fontWeight: 800, color: '#0f172a', lineHeight: 1.2 }}>
+                                {formatDisplayDate(checkInDate)} – {formatDisplayDate(checkOutDate)}
+                            </div>
+                            <div style={{ fontSize: '11px', color: '#16a34a', fontWeight: 700, marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span>{totalNights} Night{totalNights > 1 ? 's' : ''}</span>
+                                <span style={{ color: '#94a3b8' }}>•</span>
+                                <span>Change Dates v</span>
+                            </div>
+                        </div>
                     </button>
                 </div>
             </div>

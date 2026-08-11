@@ -6040,11 +6040,39 @@ body.dark-theme .info-tip-box {
 }
 
 @media (max-width: 768px) {
-    .single-room-card-wrapper {
-        padding: 0 4px !important;
+    /* Responsive Fluid Mobile Typography (Auto adapts text sizes for mobile screen) */
+    html {
+        font-size: 14.5px !important;
     }
 
-    /* Tight, seamless section spacing (removes unnecessary gaps like Picture 2) */
+    h1, .hero-title {
+        font-size: clamp(20px, 5.5vw, 28px) !important;
+        line-height: 1.25 !important;
+    }
+
+    h2, .section-title {
+        font-size: clamp(17px, 4.8vw, 22px) !important;
+        line-height: 1.3 !important;
+    }
+
+    h3, .room-title, .hotel-info-name {
+        font-size: clamp(16px, 4.2vw, 20px) !important;
+        line-height: 1.3 !important;
+    }
+
+    p, .hotel-description, .room-desc {
+        font-size: 12.5px !important;
+        line-height: 1.55 !important;
+    }
+
+    .hero-slide-caption-tag {
+        font-size: 10px !important;
+        padding: 3px 10px !important;
+        top: 10px !important;
+        right: 12px !important;
+    }
+
+    /* Tight, seamless section spacing across all views */
     section,
     .hotel-royal-info-section,
     #about-home,
@@ -6052,13 +6080,18 @@ body.dark-theme .info-tip-box {
     #amenities,
     #reach,
     #policies {
-        padding: 10px 0 !important;
+        padding: 8px 0 !important;
         margin: 0 !important;
     }
 
+    .booking-bar-wrapper {
+        margin-bottom: 12px !important;
+        padding: 12px 16px !important;
+    }
+
     .hotel-royal-info-section>div {
-        padding: 18px 16px !important;
-        gap: 14px !important;
+        padding: 14px 14px !important;
+        gap: 10px !important;
         border-radius: 12px !important;
     }
 
@@ -6149,12 +6182,14 @@ body.dark-theme .info-tip-box {
         background: #0f172a !important;
         color: #ffffff !important;
         border: 2.5px solid #ffffff !important;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
         z-index: 35 !important;
     }
+
     .room-type-nav-arrow.prev-room-arrow {
         left: -10px !important;
     }
+
     .room-type-nav-arrow.next-room-arrow {
         right: -10px !important;
     }
@@ -6418,6 +6453,7 @@ body.dark-theme .info-tip-box {
         transform: translateY(100%);
         opacity: 0;
     }
+
     100% {
         transform: translateY(0);
         opacity: 1;
@@ -6458,10 +6494,10 @@ body.dark-theme .info-tip-box {
     color: #ffffff !important;
     padding: 12px 24px !important;
     border-radius: 22px 22px 0 0 !important;
-    box-shadow: 0 -10px 35px rgba(0,0,0,0.5) !important;
+    box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.5) !important;
     border-top: 2px solid #22c55e !important;
-    border-left: 1px solid rgba(255,255,255,0.08) !important;
-    border-right: 1px solid rgba(255,255,255,0.08) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
@@ -6485,6 +6521,7 @@ body.dark-theme .info-tip-box {
         padding: 10px 16px !important;
         border-radius: 18px 18px 0 0 !important;
     }
+
     .cart-drawer-panel {
         width: 94% !important;
         max-width: 100% !important;

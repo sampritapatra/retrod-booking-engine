@@ -10,12 +10,12 @@ interface AnimatedPriceProps {
     style?: React.CSSProperties;
 }
 
-export const AnimatedPrice: React.FC<AnimatedPriceProps> = ({ 
-    value, 
-    currency = 'INR', 
-    durationMs = 600, 
-    className, 
-    style 
+export const AnimatedPrice: React.FC<AnimatedPriceProps> = ({
+    value,
+    currency = 'INR',
+    durationMs = 600,
+    className,
+    style
 }) => {
     const [displayVal, setDisplayVal] = useState(value);
     const prevValRef = useRef(value);

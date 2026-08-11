@@ -145,7 +145,7 @@ export const ReviewsSection: React.FC = () => {
                             </div>
 
                             {/* Testimonial text inside circle */}
-                            <p 
+                            <p
                                 className="review-circle-comment"
                                 style={{
                                     fontSize: '11px',

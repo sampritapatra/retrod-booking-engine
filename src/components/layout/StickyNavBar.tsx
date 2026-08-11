@@ -3,7 +3,7 @@ import { useBooking } from '../../context/BookingContext';
 
 export const StickyNavBar: React.FC = () => {
     const { currentView, setCurrentView, openModal } = useBooking();
-    const [activeTab, setActiveTab] = useState<'overview' | 'rooms' | 'amenities' | 'reach' | 'policies'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'rooms' | 'amenities' | 'reviews' | 'reach' | 'policies'>('overview');
     const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
 
     useEffect(() => {
@@ -22,6 +22,7 @@ export const StickyNavBar: React.FC = () => {
                 { id: 'about-home', key: 'overview' },
                 { id: 'rooms', key: 'rooms' },
                 { id: 'amenities', key: 'amenities' },
+                { id: 'reviews', key: 'reviews' },
                 { id: 'reach', key: 'reach' },
                 { id: 'policies', key: 'policies' },
             ];
@@ -40,7 +41,7 @@ export const StickyNavBar: React.FC = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [currentView]);
 
-    const scrollToSection = (tabKey: 'overview' | 'rooms' | 'amenities' | 'reach' | 'policies', sectionId: string) => {
+    const scrollToSection = (tabKey: 'overview' | 'rooms' | 'amenities' | 'reviews' | 'reach' | 'policies', sectionId: string) => {
         setActiveTab(tabKey);
         const doScroll = () => {
             const el = document.getElementById(sectionId);
@@ -59,12 +60,25 @@ export const StickyNavBar: React.FC = () => {
         }
     };
 
+    const tabContainerRef = React.useRef<HTMLDivElement | null>(null);
+
+    // Auto-scroll the nav container so the active tab is always 100% visible
+    useEffect(() => {
+        if (tabContainerRef.current) {
+            const activeBtn = tabContainerRef.current.querySelector<HTMLElement>('[data-active="true"]');
+            if (activeBtn) {
+                activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+        }
+    }, [activeTab]);
+
     const tabs = [
         { key: 'overview', label: isMobile ? 'About' : 'Overview', sectionId: 'about-home' },
         { key: 'rooms', label: isMobile ? 'Rooms' : 'Rooms & Rates', sectionId: 'rooms' },
         { key: 'amenities', label: 'Amenities', sectionId: 'amenities' },
+        { key: 'reviews', label: 'Reviews', sectionId: 'reviews' },
         { key: 'reach', label: isMobile ? 'Location' : 'Location & Map', sectionId: 'reach' },
-        { key: 'policies', label: 'Rules', sectionId: 'policies' },
+        { key: 'policies', label: isMobile ? 'Rules' : 'House Rules', sectionId: 'policies' },
     ] as const;
 
     return (
@@ -88,29 +102,42 @@ export const StickyNavBar: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     gap: '12px',
-                    padding: isMobile ? '0 12px' : '4px 16px'
+                    padding: isMobile ? '0 8px' : '4px 16px'
                 }}
             >
-                {/* Horizontal tabs layout - perfectly aligned & 100% visible */}
-                <div style={{ display: 'flex', gap: isMobile ? '20px' : '36px', alignItems: 'center', flexWrap: 'nowrap', width: '100%', justifyContent: isMobile ? 'space-between' : 'flex-start', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                {/* Horizontal tabs layout with auto-scroll and full visibility */}
+                <div 
+                    ref={tabContainerRef}
+                    style={{ 
+                        display: 'flex', 
+                        gap: isMobile ? '18px' : '32px', 
+                        alignItems: 'center', 
+                        flexWrap: 'nowrap', 
+                        width: '100%', 
+                        overflowX: 'auto', 
+                        scrollbarWidth: 'none',
+                        padding: isMobile ? '0 4px' : '0'
+                    }}
+                >
                     {tabs.map((tab) => {
                         const isActive = activeTab === tab.key;
                         return (
                             <button
                                 key={tab.key}
                                 type="button"
+                                data-active={isActive ? "true" : "false"}
                                 onClick={() => scrollToSection(tab.key as any, tab.sectionId)}
                                 style={{
                                     background: 'none',
                                     border: 'none',
-                                    padding: isMobile ? '12px 2px' : '10px 4px',
-                                    fontSize: isMobile ? '14px' : '15px',
+                                    padding: isMobile ? '12px 6px' : '10px 4px',
+                                    fontSize: isMobile ? '13.5px' : '15px',
                                     fontFamily: "'Plus Jakarta Sans', sans-serif",
-                                    fontWeight: 800,
-                                    color: isActive ? '#16a34a' : 'var(--text-dark, #0f172a)',
+                                    fontWeight: isActive ? 900 : 700,
+                                    color: isActive ? '#b45309' : 'var(--text-dark, #0f172a)',
                                     cursor: 'pointer',
                                     position: 'relative',
-                                    transition: 'all 0.2s ease',
+                                    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                                     whiteSpace: 'nowrap',
                                     flexShrink: 0
                                 }}
@@ -123,11 +150,11 @@ export const StickyNavBar: React.FC = () => {
                                             bottom: 0,
                                             left: 0,
                                             right: 0,
-                                            height: '3px',
-                                            background: 'linear-gradient(90deg, #16a34a 0%, #22c55e 100%)',
-                                            borderRadius: '2px 2px 0 0',
-                                            boxShadow: '0 2px 8px rgba(22, 163, 74, 0.4)',
-                                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                                            height: '3.5px',
+                                            background: 'linear-gradient(90deg, #f59e0b 0%, #d97706 50%, #b45309 100%)',
+                                            borderRadius: '3px 3px 0 0',
+                                            boxShadow: '0 2px 10px rgba(217, 119, 6, 0.55)',
+                                            animation: 'goldenGlowLine 0.3s ease-out'
                                         }}
                                     />
                                 )}

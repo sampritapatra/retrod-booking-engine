@@ -22,22 +22,22 @@ export const Footer: React.FC = () => {
                 </div>
 
                 <div className="footer-col">
-                    <h4 style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff', marginBottom: '16px', position: 'relative' }}>
+                    <h4 style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff', marginBottom: '14px', position: 'relative' }}>
                         Booking Info
-                        <div style={{ width: '24px', height: '2px', background: '#64748b', marginTop: '6px' }}></div>
+                        <div style={{ width: '24px', height: '2px', background: '#d4af37', marginTop: '6px' }}></div>
                     </h4>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13px', color: '#cbd5e1' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span>🕒 Check-In:</span> <span>{hotelData?.check_in_time || '14:00'}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', color: '#cbd5e1' }}>
+                        <div>
+                            <span style={{ color: '#94a3b8' }}>Check-In:</span> <strong>{hotelData?.check_in_time || '12:00 PM'}</strong>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span>🕒 Check-Out:</span> <span>{hotelData?.check_out_time || '11:00'}</span>
+                        <div>
+                            <span style={{ color: '#94a3b8' }}>Check-Out:</span> <strong>{hotelData?.check_out_time || '11:00 AM'}</strong>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span>✉️</span> <a href={`mailto:${hotelData?.email || 'support@retrodtech.com'}`} style={{ color: '#cbd5e1', textDecoration: 'none' }}>{hotelData?.email || 'support@retrodtech.com'}</a>
+                        <div style={{ wordBreak: 'break-all' }}>
+                            <a href={`mailto:${hotelData?.email || 'support@retrod.in'}`} style={{ color: '#cbd5e1', textDecoration: 'none' }}>{hotelData?.email || 'support@retrod.in'}</a>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span>🎧</span> <a href={`tel:${hotelData?.phone || '+918118031833'}`} style={{ color: '#cbd5e1', textDecoration: 'none' }}>{hotelData?.phone || '+91 8118 031 833'}</a>
+                        <div>
+                            <a href={`tel:${hotelData?.phone || '9999999999'}`} style={{ color: '#cbd5e1', textDecoration: 'none' }}>{hotelData?.phone || '9999999999'}</a>
                         </div>
                     </div>
                 </div>

@@ -56,13 +56,13 @@ export const SummaryDrawer: React.FC = () => {
     return (
         <>
             {isDrawerExpanded && (
-                <div 
-                    className="cart-drawer-overlay" 
+                <div
+                    className="cart-drawer-overlay"
                     onClick={() => setIsDrawerExpanded(false)}
-                    style={{ 
-                        position: 'fixed', inset: 0, 
-                        background: 'rgba(15,23,42,0.6)', 
-                        backdropFilter: 'blur(4px)', 
+                    style={{
+                        position: 'fixed', inset: 0,
+                        background: 'rgba(15,23,42,0.6)',
+                        backdropFilter: 'blur(4px)',
                         zIndex: 998,
                         animation: 'fadeIn 0.2s ease-out'
                     }}
@@ -70,7 +70,7 @@ export const SummaryDrawer: React.FC = () => {
             )}
 
             {/* Slide-Up Invoice Breakdown Panel (Centered, Matching Top Nav Dark Theme #140b07) */}
-            <div 
+            <div
                 className="cart-drawer-panel"
                 style={{
                     background: '#140b07',
@@ -159,8 +159,8 @@ export const SummaryDrawer: React.FC = () => {
             <div className="trapezoid-cart-wrapper">
                 <div className="trapezoid-cart-bar">
                     {/* Left: Total price and breakdown trigger */}
-                    <div 
-                        style={{ display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer', userSelect: 'none' }} 
+                    <div
+                        style={{ display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer', userSelect: 'none' }}
                         onClick={() => setIsDrawerExpanded(!isDrawerExpanded)}
                     >
                         <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(34,197,94,0.2)', color: '#4ade80', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 900, transition: 'transform 0.2s', transform: isDrawerExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}>
@@ -170,8 +170,9 @@ export const SummaryDrawer: React.FC = () => {
                             <div style={{ fontSize: '19px', fontWeight: 800, color: '#4ade80', lineHeight: 1.1 }}>
                                 <AnimatedPrice value={grandTotal} currency={currency} />
                             </div>
-                            <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px', fontWeight: 600 }}>
-                                {totalRooms} Room{totalRooms > 1 ? 's' : ''} Selected &bull; Tap for Invoice
+                            <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px', fontWeight: 600, lineHeight: 1.3 }}>
+                                <div>{totalRooms} Room{totalRooms > 1 ? 's' : ''} Selected &bull; Tap for Invoice</div>
+                                <div style={{ color: '#4ade80', fontWeight: 700 }}>Total Stay: {totalNights} Night{totalNights > 1 ? 's' : ''}</div>
                             </div>
                         </div>
                     </div>

@@ -61,7 +61,7 @@ const MainLayout: React.FC = () => {
                 </>
             )}
 
-            <main className="main-content container" style={{ minHeight: 'calc(100vh - 350px)', paddingTop: '8px' }}>
+            <main className="main-content container" style={{ minHeight: 'auto', paddingTop: '4px', paddingBottom: '0px' }}>
                 {currentView === 'main' && (
                     <>
                         <HotelInfoSection />
@@ -81,12 +81,12 @@ const MainLayout: React.FC = () => {
             </main>
 
             {currentView === 'main' && (
-                <div style={{ width: '100%', overflow: 'hidden', margin: '20px 0' }}>
+                <div style={{ width: '100%', overflow: 'hidden', margin: '10px 0 0 0' }}>
                     <ReviewsSection />
                 </div>
             )}
 
-            <main className="main-content container" style={{ minHeight: 'auto', paddingTop: '0px' }}>
+            <main className="main-content container" style={{ minHeight: 'auto', paddingTop: '4px' }}>
                 {currentView === 'main' && (
                     <>
                         <LocationSection />

@@ -75,56 +75,30 @@ export const HeroSlideshow: React.FC = () => {
                             zIndex: 2
                         }} />
 
-                        {/* Slide Caption Tag (Moved to Top-Right of Picture) */}
-                        <div style={{ 
-                            position: 'absolute', 
-                            top: '24px', 
-                            right: '32px', 
-                            background: 'rgba(0, 0, 0, 0.65)', 
-                            backdropFilter: 'blur(10px)',
-                            color: '#ffffff', 
-                            padding: '6px 18px', 
-                            borderRadius: '24px', 
-                            fontSize: '13px', 
-                            fontWeight: 700,
-                            letterSpacing: '0.3px',
-                            border: '1px solid rgba(255,255,255,0.2)',
-                            zIndex: 3
-                        }}>
+                        {/* Slide Caption Tag (Top-Right of Picture, Smaller and Clean) */}
+                        <div 
+                            className="hero-slide-caption-tag"
+                            style={{ 
+                                position: 'absolute', 
+                                top: '16px', 
+                                right: '20px', 
+                                background: 'rgba(0, 0, 0, 0.65)', 
+                                backdropFilter: 'blur(10px)',
+                                color: '#ffffff', 
+                                padding: '4px 12px', 
+                                borderRadius: '20px', 
+                                fontSize: '11.5px', 
+                                fontWeight: 700,
+                                letterSpacing: '0.2px',
+                                border: '1px solid rgba(255,255,255,0.2)',
+                                zIndex: 3
+                            }}
+                        >
                             {slide.caption}
                         </div>
                     </div>
                 );
             })}
-
-            {/* Fixed Hotel Logo (Top-Left Corner of Slideshow Picture, Only Logo, No Name) */}
-            <div style={{
-                position: 'absolute',
-                top: '24px',
-                left: '32px',
-                width: '56px',
-                height: '56px',
-                borderRadius: '14px',
-                overflow: 'hidden',
-                background: 'rgba(255, 255, 255, 0.95)',
-                backdropFilter: 'blur(8px)',
-                border: '2px solid rgba(255, 255, 255, 0.85)',
-                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
-                zIndex: 20,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer'
-            }} onClick={() => openModal('gallery')}>
-                <img
-                    src={hotelData?.logo_url || "/retrod-logo.png"}
-                    alt={`${hotelData?.name || 'Retrod'} Logo`}
-                    style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '6px' }}
-                    onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = "/retrod-logo.png";
-                    }}
-                />
-            </div>
 
             {/* Navigation Arrow Controls */}
             {slides.length > 1 && (

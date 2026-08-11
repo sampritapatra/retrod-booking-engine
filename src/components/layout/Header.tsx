@@ -39,50 +39,51 @@ export const Header: React.FC = () => {
                 >
 
                     {/* Left: Royal Contact Boxes */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '6px' : '12px', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '12px', flexShrink: 1, minWidth: 0, overflow: 'hidden' }}>
                         <a
                             href={`tel:${hotelData?.phone || '+919876543210'}`}
                             style={{
                                 background: '#3d3029',
                                 border: '1px solid #54443b',
                                 color: '#f5f2eb',
-                                padding: isMobile ? '3px 10px' : '4px 14px',
+                                padding: isMobile ? '3px 8px' : '4px 14px',
                                 borderRadius: '20px',
-                                fontSize: '11px',
+                                fontSize: isMobile ? '10px' : '11px',
                                 fontWeight: 600,
                                 textDecoration: 'none',
                                 display: 'inline-flex',
                                 alignItems: 'center',
-                                gap: '4px',
-                                boxShadow: '0 1px 4px rgba(0,0,0,0.15)'
+                                gap: '3px',
+                                whiteSpace: 'nowrap'
                             }}
                         >
-                            <span style={{ color: '#d97706' }}>📞</span> {hotelData?.phone || '+91 98765 43210'}
+                            <span style={{ color: '#d97706' }}>📞</span> {hotelData?.phone || '9999999999'}
                         </a>
 
-                        <a
-                            href={`mailto:${hotelData?.email || 'support@retrod.in'}`}
-                            style={{
-                                background: '#3d3029',
-                                border: '1px solid #54443b',
-                                color: '#f5f2eb',
-                                padding: isMobile ? '3px 10px' : '4px 14px',
-                                borderRadius: '20px',
-                                fontSize: '11px',
-                                fontWeight: 600,
-                                textDecoration: 'none',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                                boxShadow: '0 1px 4px rgba(0,0,0,0.15)'
-                            }}
-                        >
-                            <span style={{ color: '#d97706' }}>✉️</span> {hotelData?.email || 'support@retrod.in'}
-                        </a>
+                        {!isMobile && (
+                            <a
+                                href={`mailto:${hotelData?.email || 'support@retrod.in'}`}
+                                style={{
+                                    background: '#3d3029',
+                                    border: '1px solid #54443b',
+                                    color: '#f5f2eb',
+                                    padding: '4px 14px',
+                                    borderRadius: '20px',
+                                    fontSize: '11px',
+                                    fontWeight: 600,
+                                    textDecoration: 'none',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px'
+                                }}
+                            >
+                                <span style={{ color: '#d97706' }}>✉️</span> {hotelData?.email || 'support@retrod.in'}
+                            </a>
+                        )}
                     </div>
 
                     {/* Right: Currency & Theme Selectors */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
                         <select
                             value={currency}
                             onChange={(e) => setCurrency(e.target.value as CurrencyType)}
@@ -91,8 +92,8 @@ export const Header: React.FC = () => {
                                 color: '#f5f2eb',
                                 border: '1px solid #54443b',
                                 borderRadius: '6px',
-                                padding: isMobile ? '3px 6px' : '4px 10px',
-                                fontSize: '11px',
+                                padding: isMobile ? '2px 4px' : '4px 10px',
+                                fontSize: isMobile ? '10px' : '11px',
                                 fontWeight: 600,
                                 cursor: 'pointer'
                             }}
@@ -110,8 +111,8 @@ export const Header: React.FC = () => {
                                 color: '#f5f2eb',
                                 border: '1px solid #54443b',
                                 borderRadius: '6px',
-                                padding: isMobile ? '3px 8px' : '4px 10px',
-                                fontSize: '12px',
+                                padding: isMobile ? '2px 4px' : '4px 10px',
+                                fontSize: isMobile ? '11px' : '12px',
                                 fontWeight: 600,
                                 cursor: 'pointer'
                             }}
