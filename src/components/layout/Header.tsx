@@ -138,17 +138,26 @@ export const Header: React.FC = () => {
                 </div>
             </div>
 
-            {/* Mobile Logo Brand Header Row (Visible ONLY on mobile devices, hidden on desktop) */}
-            {isMobile && (
+            {/* Main Hotel Brand Header Row (Visible on both Desktop and Mobile, maintains 1 logo in top corner) */}
+            <div
+                className="main-brand-logo-bar"
+                style={{
+                    background: 'var(--card-bg, #ffffff)',
+                    borderBottom: '1px solid var(--border-color, #e2e8f0)',
+                    padding: isMobile ? '8px 14px' : '12px 24px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                }}
+            >
                 <div
-                    className="mobile-brand-logo-bar"
+                    className="container"
                     style={{
-                        background: 'var(--card-bg, #ffffff)',
-                        borderBottom: '1px solid var(--border-color, #e2e8f0)',
-                        padding: '10px 16px',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'space-between'
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        padding: 0
                     }}
                 >
                     <div
@@ -158,13 +167,13 @@ export const Header: React.FC = () => {
                         <img
                             src={hotelData?.logo_url || "/retrod-logo.png"}
                             alt={`${hotelData?.name || 'Retrod'} Logo`}
-                            style={{ width: '36px', height: '36px', objectFit: 'contain', borderRadius: '8px' }}
+                            style={{ width: isMobile ? '34px' : '40px', height: isMobile ? '34px' : '40px', objectFit: 'contain', borderRadius: '8px' }}
                             onError={(e) => {
                                 (e.currentTarget as HTMLImageElement).src = "/retrod-logo.png";
                             }}
                         />
                         <div>
-                            <div style={{ fontSize: '17px', fontWeight: 800, color: 'var(--text-dark, #0f172a)', lineHeight: 1.1 }}>
+                            <div style={{ fontSize: isMobile ? '16px' : '19px', fontWeight: 800, color: 'var(--text-dark, #0f172a)', lineHeight: 1.1 }}>
                                 {hotelData?.name || 'Retrod'}
                             </div>
                             <div style={{ fontSize: '11px', color: 'var(--text-muted, #64748b)', fontWeight: 500 }}>
@@ -173,7 +182,7 @@ export const Header: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            )}
+            </div>
         </header>
     );
 };
