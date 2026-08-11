@@ -1,13 +1,27 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { HotelData, CartSlot, ThemeType, CurrencyType } from '../types';
+import { HotelData, CartSlot, ThemeType, CurrencyType, PromoCodeItem } from '../types';
 import { fetchHotelDataFromApi } from '../services/api';
 import { calculateNights } from '../utils/date';
+import { calculatePlanPriceWithPromo } from '../utils/promo';
+
+export interface GuestInfo {
+    email: string;
+    phone: string;
+    firstName: string;
+    lastName: string;
+    purpose?: 'LEISURE' | 'BUSINESS';
+    companyName?: string;
+    gstNumber?: string;
+}
 
 interface BookingContextType {
     hotelSlug: string;
     hotelData: HotelData | null;
+    guestInfo: GuestInfo | null;
+    setGuestInfo: (info: GuestInfo) => void;
     theme: ThemeType;
     setTheme: (t: ThemeType) => void;
+
     currency: CurrencyType;
     setCurrency: (c: CurrencyType) => void;
     checkInDate: Date;
@@ -19,10 +33,15 @@ interface BookingContextType {
     totalAdults: number;
     totalChildren: number;
     updateGlobalOccupancy: (adults: number, children: number) => void;
-    currentView: 'main' | 'checkout' | 'payment' | 'event';
-    setCurrentView: (v: 'main' | 'checkout' | 'payment' | 'event') => void;
+    currentView: 'main' | 'checkout' | 'payment' | 'payment-success' | 'event';
+    setCurrentView: (v: 'main' | 'checkout' | 'payment' | 'payment-success' | 'event') => void;
+    lastBookingRef: string;
+    setLastBookingRef: (ref: string) => void;
     cartSlots: CartSlot[];
     unlockedPromos: Record<string, boolean>;
+    appliedPlanPromos: Record<string, PromoCodeItem | null>;
+    applyPromoToPlan: (roomId: number, planId: number, promo: PromoCodeItem | null) => void;
+    getAppliedPromoForPlan: (roomId: number, planId: number) => PromoCodeItem | null;
     togglePromoOffer: (roomId: number, planId: number) => void;
     updateCartQuantity: (roomId: number, planId: number, delta: number) => void;
     removeCartSlot: (slotId: string) => void;
@@ -42,8 +61,10 @@ const BookingContext = createContext<BookingContextType | undefined>(undefined);
 export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [hotelSlug, setHotelSlug] = useState<string>('hotelxyz');
     const [hotelData, setHotelData] = useState<HotelData | null>(null);
-    
+    const [guestInfo, setGuestInfo] = useState<GuestInfo | null>(null);
+
     // Theme state
+
     const [theme, setThemeState] = useState<ThemeType>(() => {
         const saved = localStorage.getItem('retrod_theme');
         return (saved as ThemeType) || 'light';
@@ -100,7 +121,8 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
 
     // Views & Modals state
-    const [currentView, setCurrentView] = useState<'main' | 'checkout' | 'payment' | 'event'>('main');
+    const [currentView, setCurrentView] = useState<'main' | 'checkout' | 'payment' | 'payment-success' | 'event'>('main');
+    const [lastBookingRef, setLastBookingRef] = useState<string>('');
     const [activeModal, setActiveModal] = useState<string | null>(null);
     const [modalParams, setModalParams] = useState<{ roomId?: number; planId?: number; slotId?: string }>({});
 
@@ -116,26 +138,111 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     // Cart & Promo state
     const [cartSlots, setCartSlots] = useState<CartSlot[]>([]);
+    const [appliedPlanPromos, setAppliedPlanPromos] = useState<Record<string, PromoCodeItem | null>>({});
     const [unlockedPromos, setUnlockedPromos] = useState<Record<string, boolean>>({});
     const [appliedDiscountPercent, setAppliedDiscountPercent] = useState<number>(0);
 
-    // Initial Fetch
+    // Initial Fetch with flexible URL path, query param, and subdomain slug resolution
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        const slug = params.get('hSlug') || params.get('slug') || 'hotelxyz';
-        setHotelSlug(slug);
-        
-        fetchHotelDataFromApi(slug).then(data => {
+        let slug = params.get('hSlug') || params.get('slug');
+
+        if (!slug) {
+            const pathname = window.location.pathname.replace(/^\/+|\/+$/g, '');
+            if (pathname && pathname !== 'index.html') {
+                slug = pathname;
+            }
+        }
+
+        if (!slug) {
+            const host = window.location.hostname;
+            const parts = host.split('.');
+            if (parts.length >= 3 && !['www', 'localhost', '127'].includes(parts[0].toLowerCase())) {
+                slug = parts[0].toLowerCase();
+            }
+        }
+
+        const resolvedSlug = (slug || 'retrod').toLowerCase().trim();
+        setHotelSlug(resolvedSlug);
+
+        fetchHotelDataFromApi(resolvedSlug).then(data => {
             setHotelData(data);
+            if (data && data.name) {
+                document.title = `${data.name} - Official Booking Engine`;
+            }
         });
     }, []);
 
+    useEffect(() => {
+        if (hotelData) {
+            document.title = hotelData.page_title || `${hotelData.name} - Official Booking Engine`;
+            if (hotelData.theme_color) {
+                document.documentElement.style.setProperty('--primary-color', hotelData.theme_color);
+                document.documentElement.style.setProperty('--brand-color', hotelData.theme_color);
+            }
+        }
+    }, [hotelData]);
+
+    const applyPromoToPlan = (roomId: number, planId: number, promo: PromoCodeItem | null) => {
+        const key = `${roomId}_${planId}`;
+        const newPromo = (appliedPlanPromos[key] && appliedPlanPromos[key]?.code === promo?.code) ? null : promo;
+
+        setAppliedPlanPromos(prev => {
+            if (newPromo === null) {
+                const next = { ...prev };
+                delete next[key];
+                return next;
+            }
+            return {
+                ...prev,
+                [key]: newPromo
+            };
+        });
+
+        setUnlockedPromos(prev => {
+            if (newPromo === null) {
+                const next = { ...prev };
+                delete next[key];
+                return next;
+            }
+            return {
+                ...prev,
+                [key]: true
+            };
+        });
+
+        // Update active cart slots for this room & plan
+        setCartSlots(prev => prev.map(s => {
+            if (s.roomId === roomId && s.planId === planId) {
+                const promoRes = calculatePlanPriceWithPromo(s.basePricePerNight, totalNights, newPromo);
+                const discountPerNight = totalNights > 0 ? Math.round(promoRes.discountAmount / totalNights) : 0;
+                return {
+                    ...s,
+                    appliedPromoCode: newPromo?.code,
+                    discountAmountPerNight: discountPerNight,
+                    totalDiscountAmount: promoRes.discountAmount
+                };
+            }
+            return s;
+        }));
+    };
+
+    const getAppliedPromoForPlan = (roomId: number, planId: number): PromoCodeItem | null => {
+        const key = `${roomId}_${planId}`;
+        return appliedPlanPromos[key] || null;
+    };
+
     const togglePromoOffer = (roomId: number, planId: number) => {
         const key = `${roomId}_${planId}`;
-        setUnlockedPromos(prev => ({
-            ...prev,
-            [key]: !prev[key]
-        }));
+        const existing = appliedPlanPromos[key];
+        if (existing) {
+            applyPromoToPlan(roomId, planId, null);
+        } else {
+            // Find hotel's first active promo code
+            const hotelPromos = (hotelData?.promo_codes || []).filter(p => p.isActive !== false && p.is_active !== false);
+            const defaultPromo = hotelPromos[0] || { code: 'EXCLUSIVE14', discountType: 'percentage', discountValue: 14, minNights: 1 };
+            applyPromoToPlan(roomId, planId, defaultPromo);
+        }
     };
 
     const updateCartQuantity = (roomId: number, planId: number, delta: number) => {
@@ -147,6 +254,11 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
         const currentMatching = cartSlots.filter(s => s.roomId === roomId && s.planId === planId);
 
         if (delta > 0) {
+            const promo = getAppliedPromoForPlan(roomId, planId);
+            const basePrice = plan.single_occupancy_price || room.starting_price || room.base_price || 2000;
+            const promoRes = calculatePlanPriceWithPromo(basePrice, totalNights, promo);
+            const discountPerNight = totalNights > 0 ? Math.round(promoRes.discountAmount / totalNights) : 0;
+
             const newSlotId = `slot_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
             const newSlot: CartSlot = {
                 slotId: newSlotId,
@@ -157,8 +269,13 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 adults: totalAdults || room.max_adults || 2,
                 children: totalChildren || 0,
                 childAges: [],
-                basePricePerNight: plan.single_occupancy_price || room.starting_price || room.base_price || 2000,
-                taxPerNight: plan.single_occupancy_tax || 100
+                basePricePerNight: basePrice,
+                taxPerNight: plan.single_occupancy_tax || Math.round((promoRes.finalTotal / totalNights) * 0.05),
+                appliedPromoCode: promo?.code,
+                discountAmountPerNight: discountPerNight,
+                totalDiscountAmount: promoRes.discountAmount,
+                extraAdultPrice: plan.extra_adult_price ?? 700,
+                extraChildPrice: plan.extra_child_price ?? 500,
             };
             setCartSlots(prev => [...prev, newSlot]);
         } else if (delta < 0 && currentMatching.length > 0) {
@@ -189,9 +306,9 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
                     children,
                     extraAdults: extraAdults ?? 0,
                     extraChildren: extraChildren ?? 0,
-                    extraAdultChargePerNight: extraAdultChargePerNight ?? 0,
-                    extraChildChargePerNight: extraChildChargePerNight ?? 0,
-                    totalExtraCharge: totalExtraCharge ?? 0
+                    extraAdultChargePerNight: extraAdultChargePerNight ?? s.extraAdultPrice ?? 700,
+                    extraChildChargePerNight: extraChildChargePerNight ?? s.extraChildPrice ?? 500,
+                    totalExtraCharge
                 };
             }
             return s;
@@ -205,22 +322,20 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const calculateGrandTotal = () => {
         let total = 0;
         cartSlots.forEach((slot: any) => {
-            const key = `${slot.roomId}_${slot.planId}`;
-            const isUnlocked = unlockedPromos[key];
-            let basePrice = (slot.basePricePerNight || 2000) * totalNights;
-            if (isUnlocked) {
-                basePrice = Math.round(basePrice * 0.86);
-            }
-            // Use stored extra charges if available (set via OccupancyModal)
-            // Fall back to calculating from slot data for backward compat
+            const promo = getAppliedPromoForPlan(slot.roomId, slot.planId);
+            const basePrice = slot.basePricePerNight || 2000;
+            const promoRes = calculatePlanPriceWithPromo(basePrice, totalNights, promo);
+
             const extraFee = slot.totalExtraCharge != null
                 ? slot.totalExtraCharge
                 : (() => {
                     const extraAdults = Math.max(0, (slot.adults || 2) - 2);
-                    return (extraAdults * 1000 + (slot.children || 0) * 500) * totalNights;
+                    const adultRate = slot.extraAdultPrice ?? 700;
+                    const childRate = slot.extraChildPrice ?? 500;
+                    return (extraAdults * adultRate + (slot.children || 0) * childRate) * totalNights;
                 })();
-            const tax = (slot.taxPerNight || 100) * totalNights;
-            total += (basePrice + extraFee + tax);
+            const tax = Math.round(promoRes.finalTotal * 0.05);
+            total += (promoRes.finalTotal + extraFee + tax);
         });
 
         if (appliedDiscountPercent > 0) {
@@ -233,8 +348,11 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
         <BookingContext.Provider value={{
             hotelSlug,
             hotelData,
+            guestInfo,
+            setGuestInfo,
             theme,
             setTheme,
+
             currency,
             setCurrency,
             checkInDate,
@@ -248,8 +366,13 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
             updateGlobalOccupancy,
             currentView,
             setCurrentView,
+            lastBookingRef,
+            setLastBookingRef,
             cartSlots,
             unlockedPromos,
+            appliedPlanPromos,
+            applyPromoToPlan,
+            getAppliedPromoForPlan,
             togglePromoOffer,
             updateCartQuantity,
             removeCartSlot,

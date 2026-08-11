@@ -25,7 +25,8 @@ export const Accordion: React.FC<AccordionProps> = ({ title, children, defaultOp
                     color: '#0f172a', 
                     cursor: 'pointer', 
                     display: 'flex', 
-                    justify: 'space-between', 
+                    justifyContent: 'space-between', 
+
                     alignItems: 'center' 
                 }}
             >

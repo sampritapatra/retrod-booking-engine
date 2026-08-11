@@ -25,12 +25,27 @@ export const RoomDetailsModal: React.FC = () => {
                     <p style={{ fontWeight: 700, color: '#0f172a', marginBottom: '6px' }}>Room Description:</p>
                     <p>{room.description || 'Spacious luxury room featuring modern interior decor, premium bedding, work desk, and ensuite bathroom.'}</p>
                     
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '14px', background: '#f8fafc', padding: '14px', borderRadius: '10px' }}>
-                        <div>📐 Size: 312 sq ft</div>
-                        <div>🛏️ Bed: {room.bed_type}</div>
-                        <div>👥 Capacity: {room.max_adults} Adults</div>
-                        <div>🛁 Ensuite Bathroom</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px', marginTop: '14px', background: '#f8fafc', padding: '14px', borderRadius: '10px' }}>
+                        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                            <span>📐 {(room as any).room_size || '312'} sq ft</span>
+                            <span style={{ color: '#cbd5e1' }}>|</span>
+                            <span>🛏️ {room.bed_type}</span>
+                        </div>
+                        <div>👥 Max Capacity: {room.max_adults} Adults &amp; {room.max_children || 0} Children</div>
                     </div>
+
+                    {room.amenities && room.amenities.length > 0 && (
+                        <div style={{ marginTop: '16px' }}>
+                            <p style={{ fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>Room Amenities &amp; Inclusions:</p>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                {room.amenities.map((am, i) => (
+                                    <span key={i} style={{ background: '#e0f2fe', color: '#0369a1', border: '1px solid #bae6fd', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: 600 }}>
+                                        ✔ {am}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <button type="button" onClick={closeModal} style={{ width: '100%', background: '#16a34a', color: '#fff', border: 'none', padding: '12px', borderRadius: '10px', fontWeight: 800, cursor: 'pointer' }}>

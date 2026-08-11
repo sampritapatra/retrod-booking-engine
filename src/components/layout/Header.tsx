@@ -3,89 +3,176 @@ import { useBooking } from '../../context/BookingContext';
 import { CurrencyType, ThemeType } from '../../types';
 
 export const Header: React.FC = () => {
-    const { 
-        hotelData, 
-        currency, 
-        setCurrency, 
-        theme, 
-        setTheme, 
-        currentView, 
-        setCurrentView, 
-        openModal 
+    const {
+        hotelData,
+        currency,
+        setCurrency,
+        theme,
+        setTheme,
+        setCurrentView
     } = useBooking();
 
+    const [isMobile, setIsMobile] = React.useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+
+    React.useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
-        <header className="main-header site-header">
-            <div className="header-wrapper-container container">
-                {/* Left: Brand Logo */}
-                <div className="brand-logo" style={{ cursor: 'pointer' }} onClick={() => setCurrentView('main')}>
-                    <div className="logo-box">
-                        <img 
-                            src={hotelData?.logo_url || "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=120&auto=format&fit=crop"} 
-                            alt="Logo" 
-                            className="logo-img"
-                        />
-                    </div>
-                    <div className="brand-text">
-                        <h1 className="hotel-title-text">
-                            {hotelData?.name || 'Hotel XYZ'}
-                        </h1>
-                        <p className="hotel-tagline-text">Experience Luxury &amp; Comfort Redefined</p>
-                    </div>
-                </div>
+        <header className="main-header site-header" style={{ width: '100%', background: '#ffffff' }}>
+            {/* Top Royal Contact Bar */}
+            <div style={{ background: '#2c221e', color: '#f5f2eb', padding: '6px 0', borderBottom: '1px solid #3d3029' }}>
+                <div
+                    className="container top-contact-container"
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexWrap: isMobile ? 'nowrap' : 'wrap',
+                        gap: '8px',
+                        overflowX: 'auto',
+                        whiteSpace: 'nowrap',
+                        scrollbarWidth: 'none'
+                    }}
+                >
 
-                {/* Right: 3-line Navigation Layout */}
-                <div className="top-right-3lines">
-                    {/* Line 1: Contacts */}
-                    <div className="top-line-1 top-contacts">
-                        <a href={`tel:${hotelData?.phone || '+919876543210'}`} className="top-link">
-                            📞 {hotelData?.phone || '+91 9876 543 210'}
+                    {/* Left: Royal Contact Boxes */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '6px' : '12px', flexShrink: 0 }}>
+                        <a
+                            href={`tel:${hotelData?.phone || '+919876543210'}`}
+                            style={{
+                                background: '#3d3029',
+                                border: '1px solid #54443b',
+                                color: '#f5f2eb',
+                                padding: isMobile ? '3px 10px' : '4px 14px',
+                                borderRadius: '20px',
+                                fontSize: '11px',
+                                fontWeight: 600,
+                                textDecoration: 'none',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                                boxShadow: '0 1px 4px rgba(0,0,0,0.15)'
+                            }}
+                        >
+                            <span style={{ color: '#d97706' }}>📞</span> {hotelData?.phone || '+91 98765 43210'}
                         </a>
-                        <a href={`mailto:${hotelData?.email || 'stay@hotelxyz.com'}`} className="top-link">
-                            ✉️ {hotelData?.email || 'stay@hotelxyz.com'}
+
+                        <a
+                            href={`mailto:${hotelData?.email || 'support@retrod.in'}`}
+                            style={{
+                                background: '#3d3029',
+                                border: '1px solid #54443b',
+                                color: '#f5f2eb',
+                                padding: isMobile ? '3px 10px' : '4px 14px',
+                                borderRadius: '20px',
+                                fontSize: '11px',
+                                fontWeight: 600,
+                                textDecoration: 'none',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                                boxShadow: '0 1px 4px rgba(0,0,0,0.15)'
+                            }}
+                        >
+                            <span style={{ color: '#d97706' }}>✉️</span> {hotelData?.email || 'support@retrod.in'}
                         </a>
                     </div>
 
-                    {/* Line 2: Selectors */}
-                    <div className="top-line-2 top-settings">
-                        <select 
-                            value={currency} 
+                    {/* Right: Currency & Theme Selectors */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                        <select
+                            value={currency}
                             onChange={(e) => setCurrency(e.target.value as CurrencyType)}
-                            className="currency-selector"
+                            style={{
+                                background: '#3d3029',
+                                color: '#f5f2eb',
+                                border: '1px solid #54443b',
+                                borderRadius: '6px',
+                                padding: isMobile ? '3px 6px' : '4px 10px',
+                                fontSize: '11px',
+                                fontWeight: 600,
+                                cursor: 'pointer'
+                            }}
                         >
-                            <option value="INR">in INR (₹)</option>
-                            <option value="USD">us USD ($)</option>
+                            <option value="INR" style={{ background: '#2c221e', color: '#fff' }}>INR (₹)</option>
+                            <option value="USD" style={{ background: '#2c221e', color: '#fff' }}>USD ($)</option>
                         </select>
 
-                        <select 
-                            value={theme} 
+                        <select
+                            value={theme}
                             onChange={(e) => setTheme(e.target.value as ThemeType)}
-                            className="theme-selector"
+                            title="Choose Theme"
+                            style={{
+                                background: '#3d3029',
+                                color: '#f5f2eb',
+                                border: '1px solid #54443b',
+                                borderRadius: '6px',
+                                padding: isMobile ? '3px 8px' : '4px 10px',
+                                fontSize: '12px',
+                                fontWeight: 600,
+                                cursor: 'pointer'
+                            }}
                         >
-                            <option value="light">⚪ Default White</option>
-                            <option value="dark">🌙 Dark</option>
-                            <option value="ocean">🌊 Ocean Sky</option>
-                            <option value="forest">🌲 Forest Green</option>
-                            <option value="peach">🍑 Peach</option>
+                            <option value="light" style={{ background: '#2c221e', color: '#fff' }}>
+                                {isMobile ? '⚪' : '⚪ Default White'}
+                            </option>
+                            <option value="dark" style={{ background: '#2c221e', color: '#fff' }}>
+                                {isMobile ? '🌙' : '🌙 Dark'}
+                            </option>
+                            <option value="ocean" style={{ background: '#2c221e', color: '#fff' }}>
+                                {isMobile ? '🌊' : '🌊 Ocean Sky'}
+                            </option>
+                            <option value="forest" style={{ background: '#2c221e', color: '#fff' }}>
+                                {isMobile ? '🌲' : '🌲 Forest Green'}
+                            </option>
+                            <option value="peach" style={{ background: '#2c221e', color: '#fff' }}>
+                                {isMobile ? '🍑' : '🍑 Peach'}
+                            </option>
                         </select>
                     </div>
 
-                    {/* Line 3: Main Navigation Links */}
-                    <nav className="top-line-3 nav-menu">
-                        <a href="#rooms" onClick={() => setCurrentView('main')} className="nav-link">Rooms</a>
-                        <a href="#amenities" onClick={() => setCurrentView('main')} className="nav-link">Amenities</a>
-                        <a href="#reach" onClick={() => setCurrentView('main')} className="nav-link">Contact &amp; Map</a>
-                        <a href="#policies" onClick={() => setCurrentView('main')} className="nav-link">Policies</a>
-                        <button 
-                            type="button" 
-                            onClick={() => openModal('my-booking')} 
-                            className="nav-link highlight-btn"
-                        >
-                            My Booking
-                        </button>
-                    </nav>
                 </div>
             </div>
+
+            {/* Mobile Logo Brand Header Row (Visible ONLY on mobile devices, hidden on desktop) */}
+            {isMobile && (
+                <div
+                    className="mobile-brand-logo-bar"
+                    style={{
+                        background: 'var(--card-bg, #ffffff)',
+                        borderBottom: '1px solid var(--border-color, #e2e8f0)',
+                        padding: '10px 16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    }}
+                >
+                    <div
+                        style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+                        onClick={() => setCurrentView('main')}
+                    >
+                        <img
+                            src={hotelData?.logo_url || "/retrod-logo.png"}
+                            alt={`${hotelData?.name || 'Retrod'} Logo`}
+                            style={{ width: '36px', height: '36px', objectFit: 'contain', borderRadius: '8px' }}
+                            onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = "/retrod-logo.png";
+                            }}
+                        />
+                        <div>
+                            <div style={{ fontSize: '17px', fontWeight: 800, color: 'var(--text-dark, #0f172a)', lineHeight: 1.1 }}>
+                                {hotelData?.name || 'Retrod'}
+                            </div>
+                            <div style={{ fontSize: '11px', color: 'var(--text-muted, #64748b)', fontWeight: 500 }}>
+                                Official Booking Engine
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </header>
     );
 };

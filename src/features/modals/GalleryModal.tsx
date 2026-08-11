@@ -4,12 +4,15 @@ import { useBooking } from '../../context/BookingContext';
 export const GalleryModal: React.FC = () => {
     const { hotelData, closeModal } = useBooking();
 
-    const images = hotelData?.gallery_images || [
-        { url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop", caption: "Grand Executive Lobby" },
-        { url: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&auto=format&fit=crop", caption: "Luxury Suite Bed" },
-        { url: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&auto=format&fit=crop", caption: "Infinity Pool" },
-        { url: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&auto=format&fit=crop", caption: "Restaurant Dining" }
-    ];
+    const images = (hotelData?.images && hotelData.images.length > 0)
+        ? hotelData.images.map(img => ({ url: img.image_url, caption: img.caption || hotelData.name }))
+        : (hotelData?.gallery_images && hotelData.gallery_images.length > 0)
+        ? hotelData.gallery_images
+        : (hotelData?.hero_banner_url || hotelData?.logo_url)
+        ? [{ url: (hotelData.hero_banner_url || hotelData.logo_url)!, caption: hotelData.name || 'Property Photo' }]
+        : [
+            { url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop", caption: `${hotelData?.name || 'Hotel'} View` }
+        ];
 
     return (
         <div className="gallery-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.9)', backdropFilter: 'blur(8px)', zIndex: 1000, overflowY: 'auto', padding: '40px 20px' }}>

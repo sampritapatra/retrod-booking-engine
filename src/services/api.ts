@@ -2,16 +2,16 @@ import { HotelData } from '../types';
 
 export const SAMPLE_FALLBACK_HOTEL: HotelData = {
     id: 1,
-    name: 'Hotel XYZ',
-    slug: 'hotelxyz',
+    name: 'Retrod',
+    slug: 'retrod',
     tagline: 'Experience Luxury & Comfort Redefined',
-    description: 'Welcome to Hotel XYZ – a premier luxury business & resort hotel offering state-of-the-art accommodation, modern guest facilities, fine dining experiences, and personalized hospitality.',
-    address: 'Plot No. 102, Retrod Tech Avenue, Business District, City Centre, Bhubaneswar, Odisha, 751001',
-    phone: '+91 9876 543 210',
-    email: 'stay@hotelxyz.com',
-    whatsapp: '+919876543210',
-    google_rating: 4.5,
-    logo_url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=120&auto=format&fit=crop',
+    description: 'Welcome to Retrod – a premier luxury business & resort hotel offering state-of-the-art accommodation, modern guest facilities, fine dining experiences, and personalized hospitality.',
+    address: 'Plot No. 512, Retrod, Bomikhal, Bhubaneswar, Odisha, 751001',
+    phone: '9999999999',
+    email: 'support@retrod.in',
+    whatsapp: '9999999999',
+    google_rating: 4.8,
+    logo_url: '/retrod-logo.png',
     map_embed_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3742.1462410885145!2d85.82453987593674!3d20.29424751257404!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a1909d2d0b1b511%3A0x8e8eb496924d5218!2sBhubaneswar!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin',
     facebook_url: '#',
     instagram_url: '#',
@@ -19,7 +19,7 @@ export const SAMPLE_FALLBACK_HOTEL: HotelData = {
     linkedin_url: '#',
     youtube_url: '#',
     images: [
-        { id: 1, image_url: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1400&auto=format&fit=crop', caption: 'Hotel XYZ Main Exterior & Entrance' },
+        { id: 1, image_url: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1400&auto=format&fit=crop', caption: 'Retrod Main Exterior & Entrance' },
         { id: 2, image_url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1400&auto=format&fit=crop', caption: 'Grand Executive Lobby Lounge' },
         { id: 3, image_url: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1400&auto=format&fit=crop', caption: 'Rooftop Swimming Pool & Spa' },
         { id: 4, image_url: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1400&auto=format&fit=crop', caption: 'Deluxe Room Luxury Suite' }
@@ -172,48 +172,6 @@ export const SAMPLE_FALLBACK_HOTEL: HotelData = {
         {
             id: 4,
             name: 'Junior Suite',
-            slug: 'junior-suite',
-            max_adults: 3,
-            max_children: 2,
-            bed_type: 'King Bed + Sitting Area',
-            base_price: 4200,
-            starting_price: 4200,
-            description: 'Spacious Junior Suite with a separate sitting area, King Bed, premium toiletries, Smart TV, complimentary high-speed Wi-Fi, daily housekeeping, and tea/coffee maker. Ideal for families and guests seeking additional space and comfort.',
-            thumbnail_url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=500&auto=format&fit=crop',
-            rate_plans: [
-                {
-                    id: 401,
-                    title: 'EP (Room Only)',
-                    description: 'INCLUSIONS|Spacious Junior Suite|Separate Sitting Area|King Bed|Premium Toiletries|Smart TV|Complimentary High-Speed Wi-Fi|Daily Housekeeping|Tea/Coffee Maker|Complimentary Bottled Water||MEALS|Breakfast: Not Included|Lunch: Not Included|Dinner: Not Included||CANCELLATION|Free cancellation up to 48 hours before check-in.',
-                    single_occupancy_price: 4200,
-                    single_occupancy_tax: 210.00
-                },
-                {
-                    id: 402,
-                    title: 'CP (Room + Breakfast)',
-                    description: 'INCLUSIONS|Spacious Junior Suite|Separate Sitting Area|King Bed|Premium Toiletries|Smart TV|Complimentary Breakfast|Complimentary High-Speed Wi-Fi|Daily Housekeeping|Tea/Coffee Maker|Complimentary Bottled Water||MEALS|Breakfast: Included|Lunch: Not Included|Dinner: Not Included||CANCELLATION|Free cancellation up to 48 hours before check-in.',
-                    single_occupancy_price: 4800,
-                    single_occupancy_tax: 240.00
-                },
-                {
-                    id: 403,
-                    title: 'MAP (Breakfast + Lunch / Dinner)',
-                    description: 'INCLUSIONS|Spacious Junior Suite|Separate Sitting Area|King Bed|Premium Toiletries|Smart TV|Breakfast Included|Lunch or Dinner Included|Complimentary High-Speed Wi-Fi|Daily Housekeeping|Tea/Coffee Maker||MEALS|Breakfast: Included|Lunch or Dinner: Included|Remaining Meal: Not Included||CANCELLATION|Free cancellation up to 48 hours before check-in.',
-                    single_occupancy_price: 5600,
-                    single_occupancy_tax: 280.00
-                },
-                {
-                    id: 404,
-                    title: 'AP (American Plan - 3 Meals)',
-                    description: 'INCLUSIONS|Spacious Junior Suite|Separate Sitting Area|King Bed|Premium Toiletries|Smart TV|Breakfast Included|Lunch Included|Dinner Included|Complimentary High-Speed Wi-Fi|Daily Housekeeping|Tea/Coffee Maker||MEALS|Breakfast: Included|Lunch: Included|Dinner: Included||CANCELLATION|Free cancellation up to 48 hours before check-in.',
-                    single_occupancy_price: 6400,
-                    single_occupancy_tax: 320.00
-                }
-            ]
-        },
-        {
-            id: 5,
-            name: 'Executive Suite',
             slug: 'executive-suite',
             max_adults: 4,
             max_children: 2,
@@ -254,6 +212,48 @@ export const SAMPLE_FALLBACK_HOTEL: HotelData = {
             ]
         },
         {
+            id: 5,
+            name: 'Executive Suite',
+            slug: 'executive-suite-luxury',
+            max_adults: 4,
+            max_children: 2,
+            bed_type: 'King Bed + Private Lounge',
+            base_price: 7500,
+            starting_price: 7500,
+            description: 'Ultra-luxurious Executive Suite featuring a grand master bedroom, separate living area, work space, luxury bathroom, personal butler service, and premium amenities.',
+            thumbnail_url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=500&auto=format&fit=crop',
+            rate_plans: [
+                {
+                    id: 551,
+                    title: 'EP (Room Only)',
+                    description: 'INCLUSIONS|Ultra-luxurious Executive Suite|Grand Master Bedroom|Separate Living Area|Personal Butler Service|Complimentary High-Speed Wi-Fi|Daily Housekeeping||MEALS|Breakfast: Not Included|Lunch: Not Included|Dinner: Not Included||CANCELLATION|Free cancellation up to 48 hours before check-in.',
+                    single_occupancy_price: 7500,
+                    single_occupancy_tax: 375.00
+                },
+                {
+                    id: 552,
+                    title: 'CP (Room + Breakfast)',
+                    description: 'INCLUSIONS|Ultra-luxurious Executive Suite|Grand Master Bedroom|Separate Living Area|Personal Butler Service|Complimentary Gourmet Breakfast|Complimentary High-Speed Wi-Fi|Daily Housekeeping||MEALS|Breakfast: Included|Lunch: Not Included|Dinner: Not Included||CANCELLATION|Free cancellation up to 48 hours before check-in.',
+                    single_occupancy_price: 8300,
+                    single_occupancy_tax: 415.00
+                },
+                {
+                    id: 553,
+                    title: 'MAP (Breakfast + Lunch / Dinner)',
+                    description: 'INCLUSIONS|Ultra-luxurious Executive Suite|Grand Master Bedroom|Separate Living Area|Personal Butler Service|Gourmet Breakfast Included|One Fine Dining Meal (Lunch or Dinner)|Complimentary High-Speed Wi-Fi||MEALS|Breakfast: Included|Lunch or Dinner: Included|Remaining Meal: Not Included||CANCELLATION|Free cancellation up to 48 hours before check-in.',
+                    single_occupancy_price: 9400,
+                    single_occupancy_tax: 470.00
+                },
+                {
+                    id: 554,
+                    title: 'AP (American Plan - 3 Meals)',
+                    description: 'INCLUSIONS|Ultra-luxurious Executive Suite|Grand Master Bedroom|Separate Living Area|Personal Butler Service|Gourmet Breakfast Included|Lunch Included|Dinner Included|Complimentary High-Speed Wi-Fi||MEALS|Breakfast: Included|Lunch: Included|Dinner: Included||CANCELLATION|Free cancellation up to 48 hours before check-in.',
+                    single_occupancy_price: 10500,
+                    single_occupancy_tax: 525.00
+                }
+            ]
+        },
+        {
             id: 6,
             name: 'Banquet Hall / Event Hall',
             slug: 'banquet-hall',
@@ -278,22 +278,188 @@ export const SAMPLE_FALLBACK_HOTEL: HotelData = {
     ]
 };
 
+
 export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
+    const targetSlug = (slug || 'retrod').toLowerCase().trim();
+
     try {
         const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? `http://localhost:8000/api/v1/hotels/${slug}/`
-            : `/api/v1/hotels/${slug}/`;
+            ? `http://localhost:8001/api/v1/hotels/${targetSlug}/`
+            : `/api/v1/hotels/${targetSlug}/`;
 
         const res = await fetch(apiUrl);
-        const data = await res.json();
-
-        if (data.success && data.hotel) {
-            return data.hotel;
+        if (res.ok) {
+            const data = await res.json();
+            if (data.success && data.hotel) {
+                const hotel = data.hotel;
+                if (targetSlug === 'retrod') {
+                    hotel.name = 'Retrod';
+                    hotel.slug = 'retrod';
+                }
+                if (!hotel.room_types || hotel.room_types.length < 5) {
+                    hotel.room_types = SAMPLE_FALLBACK_HOTEL.room_types;
+                }
+                if (!hotel.amenities || hotel.amenities.length < SAMPLE_FALLBACK_HOTEL.amenities.length) {
+                    hotel.amenities = SAMPLE_FALLBACK_HOTEL.amenities;
+                }
+                return hotel;
+            }
         }
     } catch (err) {
-        console.warn('API connection notice (using stored/fallback sample room data):', err);
+        console.warn('Booking Engine Backend fetch notice (trying direct PMS backend fallback):', err);
     }
-    return SAMPLE_FALLBACK_HOTEL;
+
+    // Direct fallback: Fetch property from PMS backend (port 8000)
+    try {
+        const pmsRes = await fetch('http://localhost:8000/api/superadmin-properties/');
+        if (pmsRes.ok) {
+            const props = await pmsRes.json();
+            const matchingProp = props.find((p: any) => {
+                const settings = p.booking_engine_settings || {};
+                const pSlug = (settings.slug || p.name || '').toLowerCase();
+                const pName = (p.name || '').toLowerCase();
+
+                const targetClean = targetSlug.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const pslugClean = pSlug.replace(/[^a-z0-9]/g, '');
+                const pnameClean = pName.replace(/[^a-z0-9]/g, '');
+
+                if (targetClean === pslugClean || targetClean === pnameClean) return true;
+                if (targetClean.length >= 3 && (targetClean.includes(pslugClean) || pslugClean.includes(targetClean) || targetClean.includes(pnameClean) || pnameClean.includes(targetClean))) {
+                    return true;
+                }
+                return false;
+            });
+
+            if (matchingProp) {
+                const settings = matchingProp.booking_engine_settings || {};
+                const roomTypes = (settings.custom_room_types || [])
+                    .filter((rt: any) => !rt.name.toLowerCase().includes('ocean view'))
+                    .map((rt: any, idx: number) => {
+                        const matrixRates = (settings.rates_matrix || {})[rt.id] || [];
+                        const defaultPlans = [
+                            { id: (idx + 1) * 100 + 1, title: 'EP (Room Only)', description: 'Room accommodation only', single_occupancy_price: rt.basePrice || 3500, single_occupancy_tax: Math.round((rt.basePrice || 3500) * 0.05) },
+                            { id: (idx + 1) * 100 + 2, title: 'CP (Room + Breakfast)', description: 'Room accommodation with breakfast', single_occupancy_price: (rt.basePrice || 3500) + 500, single_occupancy_tax: Math.round(((rt.basePrice || 3500) + 500) * 0.05) },
+                            { id: (idx + 1) * 100 + 3, title: 'MAP (Breakfast + Lunch / Dinner)', description: 'Room accommodation with breakfast & 1 meal', single_occupancy_price: (rt.basePrice || 3500) + 1200, single_occupancy_tax: Math.round(((rt.basePrice || 3500) + 1200) * 0.05) },
+                            { id: (idx + 1) * 100 + 4, title: 'AP (American Plan - 3 Meals)', description: 'Room accommodation with all 3 meals', single_occupancy_price: (rt.basePrice || 3500) + 2000, single_occupancy_tax: Math.round(((rt.basePrice || 3500) + 2000) * 0.05) },
+                        ];
+                        const ratePlans = matrixRates.length > 0
+                            ? matrixRates.map((mp: any, pIdx: number) => ({
+                                id: (idx + 1) * 100 + (pIdx + 1),
+                                title: mp.title || `${mp.planCode} Rate Plan`,
+                                description: mp.description || '',
+                                single_occupancy_price: mp.singlePrice || rt.basePrice,
+                                single_occupancy_tax: Math.round((mp.singlePrice || rt.basePrice) * ((mp.taxPct || 12) / 100))
+                            }))
+                            : defaultPlans;
+
+                        const roomImages = (rt.images && rt.images.length > 0)
+                            ? rt.images.map((img: any, i: number) => ({ id: i + 1, image_url: typeof img === 'string' ? img : (img.url || img.image_url), caption: rt.name }))
+                            : rt.photos && rt.photos.length > 0
+                                ? rt.photos.map((url: string, i: number) => ({ id: i + 1, image_url: url, caption: rt.name }))
+                                : [
+                                    { id: 1, image_url: rt.thumbnailUrl || 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&auto=format&fit=crop', caption: `${rt.name} View` },
+                                    { id: 2, image_url: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&auto=format&fit=crop', caption: `${rt.name} Interior` },
+                                    { id: 3, image_url: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&auto=format&fit=crop', caption: `${rt.name} Bathroom` }
+                                ];
+
+                        return {
+                            id: idx + 1,
+                            name: rt.name,
+                            slug: rt.slug || rt.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                            max_adults: rt.maxAdults || 2,
+                            max_children: rt.maxChildren || 1,
+                            bed_type: rt.bedType || 'King Bed',
+                            base_price: rt.basePrice || 3500,
+                            starting_price: rt.basePrice || 3500,
+                            description: rt.description || `${rt.name} at ${matchingProp.name}`,
+                            thumbnail_url: rt.thumbnailUrl || roomImages[0].image_url,
+                            images: roomImages,
+                            rate_plans: ratePlans
+                        };
+                    });
+
+                const propertyAmenities = (settings.amenities || []).map((am: any, idx: number) => ({
+                    id: idx + 1,
+                    name: typeof am === 'string' ? am : am.name,
+                    icon_name: typeof am === 'string' ? 'sparkles' : (am.icon_name || 'sparkles')
+                }));
+
+                const addons = (settings.addons || []).map((ad: any, idx: number) => ({
+                    id: idx + 1,
+                    name: ad.name,
+                    category: ad.category || 'Dining',
+                    charge_type: ad.chargeType || ad.charge_type || 'Per Stay',
+                    price: Number(ad.price) || 1000,
+                    tax_pct: Number(ad.taxPct || ad.tax_pct) || 18,
+                    is_active: ad.isActive !== false
+                }));
+
+                const policies = [
+                    { id: 1, policy_type: 'refund_cancellation', title: 'Refund And Cancellation Policy', content: matchingProp.cancellation_policy || settings.privacy_policy || 'Free cancellation up to 72 hours prior to arrival.' },
+                    { id: 2, policy_type: 'terms', title: 'Terms And Conditions', content: matchingProp.house_rules || settings.terms_and_conditions || `Standard check-in: ${matchingProp.check_in_time || '12:00 PM'}. Check-out: ${matchingProp.check_out_time || '10:00 AM'}.` }
+                ];
+
+                return {
+                    id: matchingProp.id || 1,
+                    name: matchingProp.name,
+                    slug: settings.slug || targetSlug,
+                    page_title: settings.page_title || `Welcome to ${matchingProp.name}`,
+                    theme_color: settings.theme_color || '#ffc107',
+                    what_makes_special: settings.what_makes_special || matchingProp.what_makes_special || matchingProp.description,
+                    backstory: settings.backstory || matchingProp.backstory,
+                    tagline: settings.tagline || `${matchingProp.name} — Luxury & Comfort Redefined`,
+                    description: matchingProp.description || `Welcome to ${matchingProp.name} – offering luxury accommodations, guest facilities, and fine dining.`,
+                    address: matchingProp.address_line_1 || `${matchingProp.city || 'Centre'}, ${matchingProp.state || ''}`,
+                    city: matchingProp.city || '',
+                    state: matchingProp.state || '',
+                    pincode: matchingProp.postal_code || '',
+                    phone: matchingProp.contact_phone || '9999999999',
+                    email: matchingProp.contact_email || 'support@retrod.in',
+                    whatsapp: settings.whatsapp || matchingProp.contact_phone || '',
+                    check_in_time: matchingProp.check_in_time || '14:00',
+                    check_out_time: matchingProp.check_out_time || '11:00',
+                    google_rating: 4.8,
+                    logo_url: settings.logo_url || matchingProp.logo_url || settings.hero_slides?.[0] || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=120&auto=format&fit=crop',
+                    hero_banner_url: settings.hero_slides?.[0] || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&auto=format&fit=crop',
+                    map_embed_url: matchingProp.google_map_url || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3742.617635678737!2d85.8338251!3d20.2644',
+                    facebook_url: settings.facebook || settings.facebook_url || '#',
+                    instagram_url: settings.instagram || settings.instagram_url || '#',
+                    twitter_url: settings.twitter || settings.twitter_url || '#',
+                    linkedin_url: settings.linkedin || settings.linkedin_url || '#',
+                    images: (settings.hero_slides || []).map((url: string, i: number) => ({
+                        id: i + 1,
+                        image_url: url,
+                        caption: `${matchingProp.name} Banner ${i + 1}`
+                    })),
+                    amenities: propertyAmenities,
+                    promo_codes: settings.promos || matchingProp.promo_codes || [],
+                    room_types: roomTypes,
+                    addons: addons,
+                    payment_gateways: settings.gateways || settings.payment_gateways || [],
+                    policies: policies,
+                    booking_engine_settings: settings
+                } as HotelData;
+            }
+        }
+    } catch (err2) {
+        console.warn('PMS direct fallback notice:', err2);
+    }
+
+    if (targetSlug === 'retrod') {
+        return SAMPLE_FALLBACK_HOTEL;
+    }
+
+    const cleanTitle = targetSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+    return {
+        ...SAMPLE_FALLBACK_HOTEL,
+        name: cleanTitle,
+        slug: targetSlug,
+        tagline: `${cleanTitle} — Luxury Stay`,
+        description: `Welcome to ${cleanTitle} – premier accommodations and world-class hospitality.`,
+        email: 'support@retrod.in',
+        phone: '9999999999'
+    };
 }
 
 export async function submitEventRequestApi(payload: any) {
@@ -336,9 +502,54 @@ export async function lookupBookingsApi(emailOrRef: string) {
 
 export const fetchBookingByReferenceApi = lookupBookingsApi;
 
+const getApiEndpointUrl = (path: string) => {
+    return (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? `http://localhost:8001${path}`
+        : path;
+};
+
 export async function submitBookingPaymentApi(payload: any) {
     try {
-        const res = await fetch('/api/v1/bookings/', {
+        const res = await fetch(getApiEndpointUrl('/api/v1/bookings/'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        return await res.json();
+    } catch (err: any) {
+        return { success: false, error: err.message };
+    }
+}
+
+export async function sendInvoiceNotificationApi(payload: any) {
+    try {
+        const res = await fetch(getApiEndpointUrl('/api/v1/bookings/send-invoice-notification/'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        return await res.json();
+    } catch (err: any) {
+        return { success: false, error: err.message };
+    }
+}
+
+export async function createRazorpayOrderApi(payload: any) {
+    try {
+        const res = await fetch(getApiEndpointUrl('/api/v1/payments/create-order/'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        return await res.json();
+    } catch (err: any) {
+        return { success: false, error: err.message };
+    }
+}
+
+export async function verifyRazorpayPaymentApi(payload: any) {
+    try {
+        const res = await fetch(getApiEndpointUrl('/api/v1/payments/verify/'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)

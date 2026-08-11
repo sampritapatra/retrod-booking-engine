@@ -649,6 +649,89 @@ body {
     text-align: left;
 }
 
+@keyframes smoothMarquee {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.marquee-track {
+    display: flex;
+    gap: 32px;
+    width: max-content;
+    animation: smoothMarquee 45s linear infinite;
+}
+
+.marquee-track:hover {
+    animation-play-state: paused;
+}
+
+@media (max-width: 768px) {
+    .reviews-section-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+
+    .reviews-section-header h3 {
+        font-size: 20px !important;
+    }
+
+    .reviews-section-header p {
+        font-size: 12px !important;
+    }
+
+    .reviews-google-badge {
+        padding: 4px 12px !important;
+        font-size: 12px !important;
+    }
+
+    .reviews-google-badge span {
+        font-size: 12px !important;
+    }
+
+    .marquee-track {
+        gap: 16px !important;
+        animation-duration: 55s !important;
+    }
+
+    .review-circle-card {
+        width: 190px !important;
+        height: 190px !important;
+        padding: 14px !important;
+    }
+
+    .review-circle-avatar {
+        width: 34px !important;
+        height: 34px !important;
+        margin-bottom: 4px !important;
+    }
+
+    .review-circle-avatar svg {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .review-circle-author {
+        font-size: 12px !important;
+    }
+
+    .review-circle-stars {
+        font-size: 11px !important;
+        margin-bottom: 4px !important;
+    }
+
+    .review-circle-comment {
+        font-size: 9.5px !important;
+        line-height: 1.35 !important;
+        -webkit-line-clamp: 4 !important;
+    }
+}
+
 .summary-hint {
     font-size: 13px;
     color: var(--text-muted);
@@ -5138,6 +5221,7 @@ body.dark-theme .info-tip-box {
 }
 
 @media (max-width: 768px) {
+
     /* ── MOBILE ACCORDION STYLES (<= 768px ONLY) ── */
     .mobile-only-accordion-header {
         display: flex !important;
@@ -5691,7 +5775,7 @@ body.dark-theme .info-tip-box {
     position: sticky;
     top: 0;
     z-index: 900;
-    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.06));
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.06));
     width: 100%;
     box-sizing: border-box;
 }
@@ -5739,7 +5823,8 @@ body.dark-theme .info-tip-box {
     gap: 8px;
 }
 
-.currency-selector, .theme-selector {
+.currency-selector,
+.theme-selector {
     background: var(--bg-main, #f8fafc);
     color: var(--text-dark, #0f172a);
     border: 1px solid var(--border-color, #cbd5e1);
@@ -5782,7 +5867,7 @@ body.dark-theme .info-tip-box {
     border-radius: 20px;
     font-size: 12px;
     font-weight: 700;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .nav-link.highlight-btn:hover {
@@ -5871,7 +5956,8 @@ body.dark-theme .info-tip-box {
         justify-content: flex-end;
     }
 
-    .currency-selector, .theme-selector {
+    .currency-selector,
+    .theme-selector {
         padding: 2px 6px;
         font-size: 11px;
     }
@@ -5928,5 +6014,480 @@ body.dark-theme .info-tip-box {
 @media (max-width: 330px) {
     .amenities-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ── Room Card Carousel & Mobile Responsiveness ── */
+.room-side-arrow {
+    opacity: 0.75;
+    transition: transform 0.2s ease, opacity 0.2s ease, color 0.2s ease !important;
+}
+
+.room-side-arrow:hover {
+    opacity: 1 !important;
+    color: #16a34a !important;
+    transform: translateY(-50%) scale(1.25) !important;
+}
+
+@media (max-width: 1024px) {
+    .room-side-arrow.prev-arrow {
+        left: -40px !important;
+    }
+
+    .room-side-arrow.next-arrow {
+        right: -40px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .single-room-card-wrapper {
+        padding: 0 4px !important;
+    }
+
+    /* Tight, seamless section spacing (removes unnecessary gaps like Picture 2) */
+    section,
+    .hotel-royal-info-section,
+    #about-home,
+    #rooms,
+    #amenities,
+    #reach,
+    #policies {
+        padding: 10px 0 !important;
+        margin: 0 !important;
+    }
+
+    .hotel-royal-info-section>div {
+        padding: 18px 16px !important;
+        gap: 14px !important;
+        border-radius: 12px !important;
+    }
+
+    /* Reduced hero slideshow picture height on mobile */
+    .hero-slideshow-container {
+        height: 220px !important;
+        max-height: 38vh !important;
+    }
+
+    /* Sticky Navigation Bar on Mobile - Pinned at top: 0 (100% visible, no half cut-off) */
+    .sticky-navigation-bar {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 999 !important;
+        margin: 0 !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    .sticky-navigation-bar .container {
+        padding: 0 10px !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        scrollbar-width: none !important;
+    }
+
+    .sticky-navigation-bar button {
+        font-size: 14px !important;
+        padding: 10px 2px !important;
+        white-space: nowrap !important;
+    }
+
+    /* Mobile Room Cards Layout (Compact & Optimized Whitespace) */
+    .room-card,
+    [id^="room-"] {
+        flex-direction: column !important;
+        min-height: auto !important;
+        margin-bottom: 16px !important;
+    }
+
+    .room-card>div:first-child,
+    [id^="room-"]>div:first-child {
+        width: 100% !important;
+        height: 180px !important;
+        min-height: 180px !important;
+    }
+
+    .room-card>div:nth-child(2),
+    [id^="room-"]>div:nth-child(2) {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border-color, #e2e8f0) !important;
+        padding: 14px 16px !important;
+    }
+
+    .room-card>div:nth-child(3),
+    [id^="room-"]>div:nth-child(3) {
+        width: 100% !important;
+        padding: 12px 16px !important;
+    }
+
+    /* Price on left, Add Room Button on right side in mobile view */
+    .room-price-action-container {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    .room-price-block {
+        flex: 1 !important;
+    }
+
+    .room-booking-btn-block {
+        width: auto !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Room Type Navigation Arrows on Mobile - Placed near image/name top area */
+    .room-type-nav-arrow {
+        position: absolute !important;
+        top: 130px !important;
+        transform: translateY(-50%) !important;
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 22px !important;
+        font-weight: 900 !important;
+        background: #0f172a !important;
+        color: #ffffff !important;
+        border: 2.5px solid #ffffff !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+        z-index: 35 !important;
+    }
+    .room-type-nav-arrow.prev-room-arrow {
+        left: -10px !important;
+    }
+    .room-type-nav-arrow.next-room-arrow {
+        right: -10px !important;
+    }
+
+    /* Side Arrow Controls on Mobile */
+    .room-side-arrow {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 16px !important;
+    }
+
+    .room-side-arrow.prev-arrow {
+        left: 2px !important;
+    }
+
+    .room-side-arrow.next-arrow {
+        right: 2px !important;
+    }
+
+    /* Room Name & Max Capacity Inline Layout */
+    .room-title-capacity-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin-bottom: 8px !important;
+    }
+
+    .room-title-capacity-header h3 {
+        font-size: 18px !important;
+        font-weight: 800 !important;
+        color: #000000 !important;
+    }
+
+    .desktop-capacity-text {
+        display: none !important;
+    }
+
+    .mobile-capacity-emoji {
+        display: inline-block !important;
+        font-size: 12px !important;
+        background: #f0fdf4 !important;
+        border: 1px solid #86efac !important;
+        color: #15803d !important;
+        padding: 2px 8px !important;
+        border-radius: 12px !important;
+        font-weight: 700 !important;
+        white-space: nowrap !important;
+    }
+
+    .section-dark-header {
+        color: #000000 !important;
+        font-weight: 900 !important;
+    }
+
+    /* Inline Side-by-Side Meal Plans & Amenities in Mobile View */
+    .mobile-meal-amenities-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .meal-plans-block {
+        margin-bottom: 0 !important;
+    }
+
+    .amenities-block {
+        margin-bottom: 6px !important;
+    }
+
+    .rate-details-inline-btn {
+        display: inline-flex !important;
+    }
+
+    .desktop-rate-details-btn {
+        display: none !important;
+    }
+
+    /* Price on left & Select Room / Stepper button on right side */
+    .mobile-price-action-wrapper {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 12px !important;
+        width: 100% !important;
+        margin-top: 4px !important;
+    }
+
+    .booking-action-btn-wrapper {
+        flex-shrink: 0 !important;
+        min-width: 130px !important;
+    }
+
+    /* Top contact container single line */
+    .top-contact-container {
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+    }
+}
+
+/* ── Rules Section Card Grid Styling & Minimal Mobile Layout ── */
+.rules-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    max-width: 860px;
+}
+
+.rule-card-btn {
+    background: #ffffff;
+    border: 1.5px solid #d4af37;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.12);
+    transition: all 0.2s ease-in-out;
+}
+
+.rule-card-btn:hover {
+    border-color: #b8860b;
+    box-shadow: 0 6px 16px rgba(212, 175, 55, 0.25);
+    transform: translateY(-2px);
+}
+
+.rule-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
+    border: 1px solid #f59e0b;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.rule-card-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+@media (max-width: 768px) {
+    .rules-cards-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .rule-card-btn {
+        padding: 10px 12px !important;
+        border-radius: 10px !important;
+        gap: 8px !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    .rule-card-icon {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 13px !important;
+    }
+
+    .rule-card-title {
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .promo-popover-box {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 88vw !important;
+        max-width: 320px !important;
+        z-index: 10000 !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+        text-align: left !important;
+    }
+}
+
+/* ── Footer Grid & 2-Column Responsive Alignment ── */
+.main-footer {
+    background: #0f172a;
+    color: #94a3b8;
+    padding: 24px 0 16px 0;
+    margin-top: 16px;
+    border-top: 1.5px solid #d4af37;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px 24px !important;
+    margin-bottom: 20px !important;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #1e293b;
+    padding-top: 14px;
+}
+
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px 14px !important;
+    }
+
+    #policies,
+    .main-footer {
+        margin-top: 10px !important;
+        padding-top: 12px !important;
+    }
+
+    /* Event & Banquet 2-Column Compact Mobile Layout */
+    .banquet-card-container {
+        padding: 12px 14px !important;
+        gap: 10px !important;
+        align-items: center !important;
+    }
+
+    .banquet-info-side {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+
+    .banquet-photo-side {
+        width: 105px !important;
+        height: 85px !important;
+        flex-shrink: 0 !important;
+        border-radius: 8px !important;
+    }
+
+    .banquet-desc-text {
+        display: -webkit-box !important;
+        -webkit-line-clamp: 1 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        margin-bottom: 4px !important;
+    }
+}
+
+/* ── Smooth Bottom Slide Bar Keyframes & Hover Effects ── */
+@keyframes slideUpSmooth {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.cart-checkout-arrow-btn:hover {
+    transform: scale(1.12) rotate(4deg) !important;
+    background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%) !important;
+    box-shadow: 0 6px 22px rgba(34, 197, 94, 0.75) !important;
+}
+
+.cart-checkout-arrow-btn:active {
+    transform: scale(0.95) !important;
+}
+
+/* ── Floating Sticky Cart Bar & Drawer Panel Centering ── */
+.trapezoid-cart-wrapper {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-end !important;
+    pointer-events: none !important;
+}
+
+.trapezoid-cart-bar {
+    pointer-events: auto !important;
+    position: relative !important;
+    margin: 0 auto !important;
+    width: 90% !important;
+    max-width: 540px !important;
+    background: #140b07 !important;
+    color: #ffffff !important;
+    padding: 12px 24px !important;
+    border-radius: 22px 22px 0 0 !important;
+    box-shadow: 0 -10px 35px rgba(0,0,0,0.5) !important;
+    border-top: 2px solid #22c55e !important;
+    border-left: 1px solid rgba(255,255,255,0.08) !important;
+    border-right: 1px solid rgba(255,255,255,0.08) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    animation: slideUpSmooth 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.cart-drawer-panel {
+    position: fixed !important;
+    bottom: 60px !important;
+    left: 50% !important;
+    transform: translate(-50%, 0) !important;
+    width: 90% !important;
+    max-width: 540px !important;
+    margin: 0 auto !important;
+}
+
+@media (max-width: 768px) {
+    .trapezoid-cart-bar {
+        width: 94% !important;
+        max-width: 100% !important;
+        padding: 10px 16px !important;
+        border-radius: 18px 18px 0 0 !important;
+    }
+    .cart-drawer-panel {
+        width: 94% !important;
+        max-width: 100% !important;
+        padding: 16px 14px !important;
     }
 }
