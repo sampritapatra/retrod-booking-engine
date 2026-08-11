@@ -445,18 +445,18 @@ export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
         console.warn('PMS direct fallback notice:', err2);
     }
 
-    if (targetSlug === 'retrod') {
+    if (targetSlug === 'retrod' || targetSlug.includes('frontend-beige-theta-65') || targetSlug.includes('vercel')) {
         return SAMPLE_FALLBACK_HOTEL;
     }
 
-    const cleanTitle = targetSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const cleanTitle = targetSlug.includes('frontend') ? 'Retrod' : targetSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
     return {
         ...SAMPLE_FALLBACK_HOTEL,
-        name: cleanTitle,
+        name: cleanTitle === 'Frontend Beige Theta 65' ? 'Retrod' : cleanTitle,
         slug: targetSlug,
-        tagline: `${cleanTitle} — Luxury Stay`,
-        description: `Welcome to ${cleanTitle} – premier accommodations and world-class hospitality.`,
+        tagline: `Retrod — Luxury & Comfort Redefined`,
+        description: `Welcome to Retrod – premier accommodations and world-class hospitality.`,
         email: 'support@retrod.in',
         phone: '9999999999'
     };
