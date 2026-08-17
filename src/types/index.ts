@@ -50,6 +50,7 @@ export interface RoomType {
     amenities?: string[];
     rate_plans?: RatePlan[];
     max_halls?: number;
+    available_rooms?: number;
 }
 
 export interface PromoCodeItem {
@@ -138,6 +139,18 @@ export interface HotelData {
     addons?: AddonPackage[];
     payment_gateways?: PaymentGatewayItem[];
     policies?: PolicyItem[];
+    reviews?: Array<{
+        id?: number;
+        author: string;
+        avatar_letter?: string;
+        avatar_url?: string;
+        rating: number;
+        date: string;
+        comment: string;
+        source: string;
+    }>;
+    enable_google_reviews?: boolean;
+    short_description?: string;
     booking_engine_settings?: Record<string, any>;
     facebook_url?: string;
     instagram_url?: string;

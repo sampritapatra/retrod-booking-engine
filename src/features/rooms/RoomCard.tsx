@@ -5,6 +5,7 @@ import { formatCurrency } from '../../utils/currency';
 import { AnimatedPrice } from '../../utils/AnimatedPrice';
 import { Tooltip } from '../../components/ui/Tooltip';
 import { calculatePlanPriceWithPromo } from '../../utils/promo';
+import { renderAmenityIcon, cleanAmenityName } from '../amenities/AmenitiesSection';
 
 interface RoomCardProps {
     room: RoomType;
@@ -58,7 +59,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
 
     const [selectedPlanIdx, setSelectedPlanIdx] = useState(0);
     const [promoOpen, setPromoOpen] = useState(false);
-    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const [isCalendarOpen, setIsCalendarOpen] = useState(true);
 
     /* ── promo list ── */
     const activeHotelPromos: PromoCodeItem[] = (hotelData?.promo_codes || []).filter(
@@ -80,28 +81,59 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
     if (isBanquet) {
         const hallPrice = room.starting_price || room.base_price || 25000;
         return (
-            <div className="banquet-card-container" style={{ background: 'var(--card-bg, #ffffff)', border: '1px solid var(--border-color, #e2e8f0)', borderRadius: '16px', padding: '16px 20px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'nowrap' }}>
+            <div 
+                className="banquet-card-container" 
+                style={{ 
+                    background: 'linear-gradient(135deg, #ffffff 0%, #fffdf7 100%)', 
+                    border: '2px solid #d4af37', 
+                    borderRadius: '16px', 
+                    padding: '18px 22px', 
+                    boxShadow: '0 6px 24px rgba(212,175,55,0.22)', 
+                    display: 'flex', 
+                    gap: '18px', 
+                    alignItems: 'center', 
+                    justifyContent: 'space-between', 
+                    flexWrap: 'nowrap',
+                    position: 'relative'
+                }}
+            >
                 {/* Left side: Info & Price */}
                 <div className="banquet-info-side" style={{ flex: 1, minWidth: 0 }}>
                     <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-dark, #0f172a)', margin: '0 0 4px 0', lineHeight: 1.2 }}>{room.name}</h3>
                     <p className="banquet-desc-text" style={{ fontSize: '12px', color: 'var(--text-muted, #64748b)', margin: '0 0 8px 0', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>Premium venue for weddings, corporate events &amp; celebrations.</p>
                     <div style={{ display: 'flex', gap: '12px', fontSize: '11px', fontWeight: 600, color: 'var(--text-dark, #334155)', marginBottom: '10px' }}>
-                        <span>👥 Up to 500</span>
-                        <span>🏢 {room.max_halls || 3} Halls</span>
+                        <span>👥 Up to 500 Guests</span>
+                        <span>🏢 {room.max_halls || 3} Halls Available</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                         <div>
                             <span style={{ fontSize: '10px', color: 'var(--text-muted, #64748b)', display: 'block', lineHeight: 1 }}>From</span>
-                            <span style={{ fontSize: '18px', fontWeight: 800, color: '#15803d' }}>
+                            <span style={{ fontSize: '18px', fontWeight: 800, color: '#b45309' }}>
                                 <AnimatedPrice value={hallPrice} currency={currency} />
                             </span>
                         </div>
-                        <button onClick={() => setCurrentView('event')} style={{ background: '#15803d', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>Book Event →</button>
+                        <button 
+                            onClick={() => setCurrentView('event')} 
+                            style={{ 
+                                background: 'linear-gradient(135deg, #d4af37 0%, #b45309 100%)', 
+                                color: '#fff', 
+                                border: '1px solid #d4af37', 
+                                padding: '8px 16px', 
+                                borderRadius: '8px', 
+                                fontSize: '12px', 
+                                fontWeight: 800, 
+                                cursor: 'pointer', 
+                                whiteSpace: 'nowrap',
+                                boxShadow: '0 2px 10px rgba(212,175,55,0.35)'
+                            }}
+                        >
+                            Book Banquet / Event →
+                        </button>
                     </div>
                 </div>
 
                 {/* Right side: Photo */}
-                <div className="banquet-photo-side" style={{ width: '130px', height: '100px', flexShrink: 0, overflow: 'hidden', borderRadius: '10px' }}>
+                <div className="banquet-photo-side" style={{ width: '140px', height: '105px', flexShrink: 0, overflow: 'hidden', borderRadius: '12px', border: '1.5px solid #d4af37' }}>
                     <img src={room.thumbnail_url} alt={room.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                 </div>
             </div>
@@ -147,21 +179,25 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
         setImgIdx(prev => (prev === imagesList.length - 1 ? 0 : prev + 1));
     };
 
+    const roomSlots = cartSlots.filter(s => s.roomId === room.id);
+    const isRoomInCart = roomSlots.length > 0;
+
     /* ── render ── */
     return (
         <div
             id={`room-${room.id}`}
-            className={`room-card ${isBanquet ? 'banquet-room-card' : ''}`}
+            className={`room-card ${isBanquet ? 'banquet-room-card' : ''} ${isRoomInCart ? 'room-card-selected' : ''}`}
             style={{
-                background: 'var(--card-bg, #ffffff)',
-                border: '1px solid var(--border-color, #e2e8f0)',
+                background: isRoomInCart ? '#faf8f2' : 'var(--card-bg, #ffffff)',
+                border: isRoomInCart ? '2px solid #ca8a04' : '1px solid var(--border-color, #e2e8f0)',
                 borderRadius: '16px',
-                boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
+                boxShadow: isRoomInCart ? '0 6px 24px rgba(202, 138, 4, 0.18)' : '0 2px 16px rgba(0,0,0,0.07)',
                 display: 'flex',
                 flexDirection: isBanquet ? 'row-reverse' : 'row',
                 overflow: 'hidden',
                 position: 'relative',
                 minHeight: '260px',
+                transition: 'all 0.25s ease',
             }}
         >
             {/* ══ LEFT: Photo ═══════════════════════════════════════════ */}
@@ -169,14 +205,22 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                 style={{ position: 'relative', width: '310px', flexShrink: 0, cursor: 'pointer', overflow: 'hidden' }}
                 onClick={() => openModal('room-details', room.id)}
             >
-                <img
-                    src={imagesList[imgIdx] || room.thumbnail_url}
-                    alt={room.name}
-                    loading="lazy"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', minHeight: '280px', transition: 'src 0.2s' }}
-                />
+                {(imagesList[imgIdx] || room.thumbnail_url) ? (
+                    <img
+                        src={imagesList[imgIdx] || room.thumbnail_url}
+                        alt={room.name}
+                        loading="lazy"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', minHeight: '280px', transition: 'src 0.2s' }}
+                    />
+                ) : (
+                    <div style={{ width: '100%', height: '100%', minHeight: '280px', background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', padding: '20px', textAlign: 'center' }}>
+                        <span style={{ fontSize: '36px', marginBottom: '8px' }}>🛏️</span>
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#f1f5f9' }}>{room.name}</span>
+                        <span style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>No photo uploaded</span>
+                    </div>
+                )}
 
-                {/* Bold Bigger Arrow Buttons for photo navigation */}
+                {/* Bold Golden Dark Arrow Buttons for photo navigation */}
                 {imagesList.length > 1 && (
                     <>
                         <button
@@ -185,11 +229,13 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                             aria-label="Previous photo"
                             style={{
                                 position: 'absolute', top: '50%', left: '8px', transform: 'translateY(-50%)',
-                                background: 'rgba(0,0,0,0.65)', color: '#fff', border: 'none',
-                                borderRadius: '50%', width: '36px', height: '36px',
-                                fontSize: '22px', fontWeight: 900, cursor: 'pointer',
+                                background: '#b45309', color: '#ffffff',
+                                border: '2px solid #fde047',
+                                borderRadius: '50%', width: '38px', height: '38px',
+                                fontSize: '20px', fontWeight: 900, cursor: 'pointer',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                boxShadow: '0 2px 8px rgba(0,0,0,0.4)', zIndex: 5,
+                                boxShadow: '0 4px 14px rgba(180, 83, 9, 0.45)', zIndex: 5,
+                                transition: 'all 0.2s ease',
                             }}
                         >
                             ❮
@@ -200,11 +246,13 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                             aria-label="Next photo"
                             style={{
                                 position: 'absolute', top: '50%', right: '8px', transform: 'translateY(-50%)',
-                                background: 'rgba(0,0,0,0.65)', color: '#fff', border: 'none',
-                                borderRadius: '50%', width: '36px', height: '36px',
-                                fontSize: '22px', fontWeight: 900, cursor: 'pointer',
+                                background: '#b45309', color: '#ffffff',
+                                border: '2px solid #fde047',
+                                borderRadius: '50%', width: '38px', height: '38px',
+                                fontSize: '20px', fontWeight: 900, cursor: 'pointer',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                boxShadow: '0 2px 8px rgba(0,0,0,0.4)', zIndex: 5,
+                                boxShadow: '0 4px 14px rgba(180, 83, 9, 0.45)', zIndex: 5,
+                                transition: 'all 0.2s ease',
                             }}
                         >
                             ❯
@@ -238,11 +286,28 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                         {room.name}
                     </h3>
 
-                    {/* Max Capacity */}
-                    <div className="room-max-capacity-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: '#15803d', fontWeight: 700 }}>
-                        <span>
-                            Max. Cap. : 👤{room.max_adults} {room.max_children !== undefined ? `👶${room.max_children}` : ''}
+                    {/* Max Capacity with Clear Vector Adult & Child Logos */}
+                    <div className="room-max-capacity-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '6px', padding: '3px 9px', color: '#15803d', fontWeight: 700 }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            <span>{room.max_adults} Adult{room.max_adults > 1 ? 's' : ''}</span>
                         </span>
+                        {room.max_children !== undefined && room.max_children > 0 && (
+                            <>
+                                <span style={{ color: '#86efac' }}>|</span>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="12" cy="8" r="4" />
+                                        <path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1" />
+                                        <path d="M10 4.5C11 3.5 13 3.5 14 4.5" />
+                                    </svg>
+                                    <span>{room.max_children} Child{room.max_children > 1 ? 'ren' : ''}</span>
+                                </span>
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -404,11 +469,31 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                             Top Amenities
                         </div>
                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                            {amenities.map((am, i) => (
-                                <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', background: 'var(--bg-main, #f0f9ff)', color: 'var(--text-dark, #0369a1)', border: '1px solid var(--border-color, #bae6fd)', borderRadius: '6px', padding: '4px 10px', fontSize: '12px', fontWeight: 500 }}>
-                                    {amenityIcon(am)} {am}
-                                </span>
-                            ))}
+                            {amenities.map((am, i) => {
+                                const clean = cleanAmenityName(am);
+                                return (
+                                    <span
+                                        key={i}
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '6px',
+                                            background: '#f8fafc',
+                                            color: '#1e293b',
+                                            border: '1px solid #e2e8f0',
+                                            borderRadius: '6px',
+                                            padding: '4px 9px',
+                                            fontSize: '12px',
+                                            fontWeight: 500
+                                        }}
+                                    >
+                                        <span style={{ color: '#b48a1c', display: 'flex', alignItems: 'center' }}>
+                                            {renderAmenityIcon(clean)}
+                                        </span>
+                                        {clean}
+                                    </span>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
@@ -490,7 +575,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                     </div>
 
                     {/* Select This Room / stepper */}
-                    <div className="booking-action-btn-wrapper">
+                    <div className="booking-action-btn-wrapper" style={{ marginTop: '12px' }}>
                         {plan && (
                             selectedQty > 0 ? (
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#15803d', borderRadius: '10px', padding: '9px 14px', gap: '8px' }}>
@@ -530,13 +615,33 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
 
                 {/* Active slot summary */}
                 {activeSlots.length > 0 && (
-                    <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         {activeSlots.map((slot, sIdx) => (
-                            <div key={slot.slotId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#555' }}>
-                                <span>Room {sIdx + 1}: 👤 {slot.adults}A {slot.children > 0 ? `👶 ${slot.children}C` : ''}</span>
-                                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                            <div key={slot.slotId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11.5px', color: '#475569' }}>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', flexWrap: 'wrap' }}>
+                                    <strong style={{ color: '#0f172a' }}>Room {sIdx + 1}:</strong>
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#0f172a', fontWeight: 700 }}>
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0f172a" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                            <circle cx="12" cy="7" r="4" />
+                                        </svg>
+                                        {slot.adults} Adult{slot.adults > 1 ? 's' : ''}
+                                    </span>
+                                    {slot.children > 0 && (
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#b45309', fontWeight: 700 }}>
+                                            &bull;
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b45309" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                                <circle cx="12" cy="8" r="4" />
+                                                <path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1" />
+                                                <path d="M10 4.5C11 3.5 13 3.5 14 4.5" />
+                                            </svg>
+                                            {slot.children} Child{slot.children > 1 ? 'ren' : ''}
+                                        </span>
+                                    )}
+                                </span>
+                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                     <button style={{ background: 'none', border: 'none', color: '#2563eb', fontSize: '11px', fontWeight: 700, cursor: 'pointer', padding: 0 }} onClick={() => openModal('edit-occupancy', room.id, plan?.id, slot.slotId)}>Edit</button>
-                                    <button style={{ background: 'none', border: 'none', color: '#ef4444', fontWeight: 800, fontSize: '13px', cursor: 'pointer', padding: 0 }} onClick={() => removeCartSlot(slot.slotId)}>&times;</button>
+                                    <button style={{ background: '#fee2e2', border: 'none', color: '#ef4444', fontWeight: 800, fontSize: '12px', width: '18px', height: '18px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => removeCartSlot(slot.slotId)}>&times;</button>
                                 </div>
                             </div>
                         ))}

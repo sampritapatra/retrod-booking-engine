@@ -32,6 +32,7 @@ export const GuestCheckoutView: React.FC = () => {
         totalNights, 
         calculateGrandTotal, 
         getAppliedPromoForPlan,
+        applyPromoToPlan,
         setCurrentView,
         setGuestInfo,
         lastBookingRef,
@@ -86,14 +87,62 @@ export const GuestCheckoutView: React.FC = () => {
     };
 
     const [selectedAddonIds, setSelectedAddonIds] = useState<string[]>([]);
+    const [isAddonDropdownOpen, setIsAddonDropdownOpen] = useState(false);
+    const [promoInputCode, setPromoInputCode] = useState('');
+    const [promoMsg, setPromoMsg] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+    const [showOffersList, setShowOffersList] = useState(false);
 
     const toggleAddon = (id: string) => {
         setSelectedAddonIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
     };
 
-    const addonsTotal = (hotelData?.addons || [])
+    const availablePromos = (hotelData?.promo_codes || []).filter(p => p.isActive !== false);
+
+    const applyPromoToAllSlots = (promo: any) => {
+        cartSlots.forEach(slot => {
+            applyPromoToPlan(slot.roomId, slot.planId, promo);
+        });
+    };
+
+    const handleApplyPromo = (codeStr?: string) => {
+        const targetCode = (codeStr || promoInputCode).trim().toUpperCase();
+        if (!targetCode) return;
+
+        const matched = availablePromos.find(p => p.code.toUpperCase() === targetCode);
+        if (!matched) {
+            setPromoMsg({ text: `Invalid coupon "${targetCode}"`, type: 'error' });
+            return;
+        }
+        if (matched.minNights && totalNights < matched.minNights) {
+            setPromoMsg({ text: `Coupon "${matched.code}" requires minimum ${matched.minNights} nights stay.`, type: 'error' });
+            return;
+        }
+
+        applyPromoToAllSlots(matched);
+        setPromoMsg({ text: `Coupon "${matched.code}" applied!`, type: 'success' });
+        setPromoInputCode('');
+        setShowOffersList(false);
+    };
+
+    const handleRemovePromo = () => {
+        applyPromoToAllSlots(null);
+        setPromoMsg(null);
+    };
+
+    const availableAddons = (hotelData?.addons && hotelData.addons.length > 0)
+        ? hotelData.addons
+        : [
+            { id: 1, name: 'Airport Pickup & Drop (Sedan)', category: 'Transfer', charge_type: 'Per Stay', price: 1200, tax_pct: 18, is_active: true },
+            { id: 2, name: 'Candlelight Dinner & Wine Setup', category: 'Dining', charge_type: 'Per Stay', price: 2500, tax_pct: 18, is_active: true },
+            { id: 3, name: 'Full Body Ayurvedic Spa Treatment (60 Min)', category: 'Wellness', charge_type: 'Per Person', price: 1800, tax_pct: 18, is_active: true },
+            { id: 4, name: 'Guaranteed Early Check-In (from 9:00 AM)', category: 'Service', charge_type: 'Per Stay', price: 800, tax_pct: 18, is_active: true },
+            { id: 5, name: 'Relaxed Late Check-Out (up to 4:00 PM)', category: 'Service', charge_type: 'Per Stay', price: 800, tax_pct: 18, is_active: true },
+            { id: 6, name: 'Guided City Sightseeing & Heritage Tour', category: 'Activity', charge_type: 'Per Group', price: 2200, tax_pct: 18, is_active: true }
+        ];
+
+    const addonsTotal = availableAddons
         .filter(a => selectedAddonIds.includes(String(a.id)))
-        .reduce((sum, a) => sum + Number(a.price), 0);
+        .reduce((sum, a) => sum + Number(a.price || 0), 0);
 
     const grandTotal = calculateGrandTotal() + addonsTotal;
 
@@ -108,11 +157,13 @@ export const GuestCheckoutView: React.FC = () => {
         const promo = getAppliedPromoForPlan(slot.roomId, slot.planId);
         const promoRes = calculatePlanPriceWithPromo(slot.basePricePerNight, totalNights, promo);
 
+        const adultRate = slot.extraAdultPrice ?? 700;
+        const childRate = slot.extraChildPrice ?? 500;
         const extraFee = slot.totalExtraCharge != null && slot.totalExtraCharge >= 0
             ? slot.totalExtraCharge
             : (() => {
-                const extraAdults = Math.max(0, slot.adults - 2);
-                return (extraAdults * 1000 + slot.children * 500) * totalNights;
+                const extraAdults = Math.max(0, (slot.adults || 2) - 2);
+                return (extraAdults * adultRate + (slot.children || 0) * childRate) * totalNights;
             })();
         const tax = Math.round(promoRes.finalTotal * 0.05);
 
@@ -133,6 +184,7 @@ export const GuestCheckoutView: React.FC = () => {
     const executeDirectPaymentVerification = async (razorpayPaymentId?: string, razorpayOrderId?: string, razorpaySignature?: string, info?: any) => {
         setIsProcessing(true);
         const fullPhone = `${countryCode} ${phone}`;
+        const selectedAddonsList = availableAddons.filter(a => selectedAddonIds.includes(String(a.id)));
         const payload = {
             hotel_slug: hotelSlug,
             booking_reference: lastBookingRef,
@@ -147,6 +199,8 @@ export const GuestCheckoutView: React.FC = () => {
             razorpay_order_id: razorpayOrderId || '',
             razorpay_signature: razorpaySignature || '',
             cart_slots: cartSlots,
+            selected_addons: selectedAddonsList,
+            addons_total: addonsTotal,
             email: email,
             phone: fullPhone,
             full_name: `${firstName} ${lastName}`.trim() || 'Valued Guest',
@@ -200,6 +254,8 @@ export const GuestCheckoutView: React.FC = () => {
         const refCode = lastBookingRef || `RETROD-${(hotelData?.name || 'XYZ').replace(/Hotel/gi, '').replace(/\s+/g, '').toUpperCase().slice(0, 3)}-${Math.floor(10000 + Math.random() * 90000)}`;
         setLastBookingRef(refCode);
 
+        const selectedAddonsList = availableAddons.filter(a => selectedAddonIds.includes(String(a.id)));
+
         // 1. Immediately store draft booking in database with status 'Payment Pending'
         try {
             await submitBookingPaymentApi({
@@ -212,6 +268,8 @@ export const GuestCheckoutView: React.FC = () => {
                 room_price: roomCharges,
                 tax_and_fees: taxAndFees,
                 cart_slots: cartSlots,
+                selected_addons: selectedAddonsList,
+                addons_total: addonsTotal,
                 email: email,
                 phone: fullPhone,
                 full_name: `${firstName} ${lastName}`.trim() || 'Valued Guest',
@@ -239,6 +297,8 @@ export const GuestCheckoutView: React.FC = () => {
             room_price: roomCharges,
             tax_and_fees: taxAndFees,
             cart_slots: cartSlots,
+            selected_addons: selectedAddonsList,
+            addons_total: addonsTotal,
             guest_info: info
         });
 
@@ -509,38 +569,118 @@ export const GuestCheckoutView: React.FC = () => {
                         )}
                     </div>
 
-                    {hotelData?.addons && hotelData.addons.length > 0 && (
-                        <div style={{ background: '#f8fafc', border: '1.5px solid #cbd5e1', padding: '16px', borderRadius: '12px', marginBottom: '20px' }}>
-                            <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', margin: '0 0 10px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                ✨ Enhance Your Stay with Add-On Packages
-                            </h4>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                {hotelData.addons.map((addon, aIdx) => {
+                    {/* ADD-ON PACKAGES & EXTRAS SECTION */}
+                    {availableAddons && availableAddons.length > 0 && (
+                        <div style={{ background: '#f8fafc', border: '1.5px solid #cbd5e1', padding: '18px 20px', borderRadius: '14px', marginBottom: '22px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+                                <div>
+                                    <h4 style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        ✨ Enhance Your Stay (Add-Ons &amp; Extras)
+                                    </h4>
+                                    <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0 0' }}>
+                                        Select optional services to personalize your booking experience.
+                                    </p>
+                                </div>
+                                {selectedAddonIds.length > 0 && (
+                                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#16a34a', background: '#dcfce7', padding: '3px 10px', borderRadius: '12px', border: '1px solid #86efac' }}>
+                                        {selectedAddonIds.length} Selected (+{formatCurrency(addonsTotal, currency)})
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Grid of Addon Cards */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '10px' }}>
+                                {availableAddons.map((addon: any, aIdx: number) => {
                                     const addonIdStr = String(addon.id || aIdx + 1);
                                     const isSelected = selectedAddonIds.includes(addonIdStr);
+                                    const getCategoryIcon = (cat?: string) => {
+                                        const c = (cat || '').toLowerCase();
+                                        if (c.includes('transfer') || c.includes('car') || c.includes('pickup') || c.includes('drop')) return '🚗';
+                                        if (c.includes('dining') || c.includes('food') || c.includes('dinner') || c.includes('meal')) return '🍷';
+                                        if (c.includes('wellness') || c.includes('spa') || c.includes('massage')) return '💆';
+                                        if (c.includes('service') || c.includes('check')) return '⏱️';
+                                        if (c.includes('activity') || c.includes('tour')) return '🗺️';
+                                        return '✨';
+                                    };
+
                                     return (
-                                        <label 
-                                            key={addonIdStr} 
-                                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: '8px', background: isSelected ? '#f0fdf4' : '#fff', border: `1px solid ${isSelected ? '#86efac' : '#e2e8f0'}`, cursor: 'pointer' }}
+                                        <div
+                                            key={addonIdStr}
+                                            onClick={() => toggleAddon(addonIdStr)}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'flex-start',
+                                                justifyContent: 'space-between',
+                                                gap: '10px',
+                                                padding: '12px 14px',
+                                                borderRadius: '10px',
+                                                background: isSelected ? '#f0fdf4' : '#ffffff',
+                                                border: `1.5px solid ${isSelected ? '#16a34a' : '#cbd5e1'}`,
+                                                boxShadow: isSelected ? '0 2px 8px rgba(22,163,74,0.15)' : '0 1px 3px rgba(0,0,0,0.03)',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s ease',
+                                                userSelect: 'none'
+                                            }}
                                         >
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <input 
-                                                    type="checkbox" 
-                                                    checked={isSelected} 
-                                                    onChange={() => toggleAddon(addonIdStr)} 
+                                            <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', flex: 1, minWidth: 0 }}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isSelected}
+                                                    onChange={() => {}}
+                                                    style={{ marginTop: '2px', accentColor: '#16a34a', width: '16px', height: '16px', cursor: 'pointer', pointerEvents: 'none' }}
                                                 />
-                                                <div>
-                                                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>{addon.name}</div>
-                                                    <div style={{ fontSize: '11px', color: '#64748b' }}>{addon.category || 'Dining'} &bull; {addon.charge_type || addon.chargeType || 'Per Stay'}</div>
+                                                <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#0f172a', lineHeight: 1.3, marginBottom: '2px' }}>
+                                                        <span style={{ marginRight: '4px' }}>{getCategoryIcon(addon.category)}</span>
+                                                        {addon.name}
+                                                    </div>
+                                                    <div style={{ fontSize: '11px', color: '#64748b' }}>
+                                                        {addon.category || 'Service'} &bull; {addon.charge_type || addon.chargeType || 'Per Stay'}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div style={{ fontSize: '13px', fontWeight: 800, color: '#16a34a' }}>
-                                                +₹{Number(addon.price).toLocaleString()}
+                                            <div style={{ fontSize: '13px', fontWeight: 800, color: '#16a34a', whiteSpace: 'nowrap', alignSelf: 'center' }}>
+                                                +{formatCurrency(Number(addon.price), currency)}
                                             </div>
-                                        </label>
+                                        </div>
                                     );
                                 })}
                             </div>
+
+                            {/* Selected Addon Pills summary */}
+                            {selectedAddonIds.length > 0 && (
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #e2e8f0' }}>
+                                    {availableAddons
+                                        .filter(a => selectedAddonIds.includes(String(a.id)))
+                                        .map(a => (
+                                            <span
+                                                key={a.id}
+                                                style={{
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '6px',
+                                                    background: '#ffffff',
+                                                    border: '1px solid #86efac',
+                                                    color: '#15803d',
+                                                    padding: '3px 10px',
+                                                    borderRadius: '16px',
+                                                    fontSize: '12px',
+                                                    fontWeight: 700
+                                                }}
+                                            >
+                                                {a.name} (+{formatCurrency(Number(a.price), currency)})
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => { e.stopPropagation(); toggleAddon(String(a.id)); }}
+                                                    style={{ background: 'none', border: 'none', color: '#dc2626', fontWeight: 800, cursor: 'pointer', padding: '0 2px', fontSize: '13px' }}
+                                                    title="Remove Addon"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </span>
+                                        ))}
+                                </div>
+                            )}
                         </div>
                     )}
 
@@ -647,13 +787,157 @@ export const GuestCheckoutView: React.FC = () => {
                                             </span>
                                         )}
                                     </div>
-                                    <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
-                                        👤 {slot.adults} Adults &bull; 👶 {slot.children} Children
+                                    <div style={{ fontSize: '11.5px', color: '#64748b', marginTop: '3px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#0f172a', fontWeight: 700 }}>
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0f172a" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                                <circle cx="12" cy="7" r="4" />
+                                            </svg>
+                                            {slot.adults} Adult{slot.adults > 1 ? 's' : ''}
+                                        </span>
+                                        {slot.children > 0 && (
+                                            <>
+                                                <span>&bull;</span>
+                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#b45309', fontWeight: 700 }}>
+                                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b45309" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                                        <circle cx="12" cy="8" r="4" />
+                                                        <path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1" />
+                                                        <path d="M10 4.5C11 3.5 13 3.5 14 4.5" />
+                                                    </svg>
+                                                    {slot.children} Child{slot.children > 1 ? 'ren' : ''}
+                                                </span>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
+
+                    {/* EXCLUSIVE OFFERS / PROMO CODES SECTION */}
+                    {availablePromos.length > 0 && (
+                        <div style={{ background: '#f8fafc', border: '1.5px dashed #818cf8', borderRadius: '12px', padding: '14px', marginBottom: '16px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                <span style={{ fontSize: '13px', fontWeight: 800, color: '#312e81', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <span>🎟️</span> Exclusive Offers &amp; Promos
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowOffersList(!showOffersList)}
+                                    style={{ background: 'none', border: 'none', color: '#4f46e5', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
+                                >
+                                    {showOffersList ? 'Hide Offers ▲' : `View Offers (${availablePromos.length}) ▼`}
+                                </button>
+                            </div>
+
+                            {/* Active Applied Promo Tag */}
+                            {appliedPromoCodesCheckout.length > 0 ? (
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#dcfce7', border: '1px solid #86efac', borderRadius: '8px', padding: '8px 12px', marginBottom: '8px' }}>
+                                    <div>
+                                        <span style={{ fontSize: '12px', fontWeight: 800, color: '#15803d' }}>
+                                            ✅ Applied: {appliedPromoCodesCheckout.join(', ')} (-{formatCurrency(totalDiscountCharges, currency)})
+                                        </span>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowOffersList(true)}
+                                            style={{ background: '#16a34a', color: '#fff', border: 'none', borderRadius: '4px', padding: '3px 8px', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
+                                        >
+                                            Change
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleRemovePromo}
+                                            style={{ background: '#fecaca', color: '#b91c1c', border: 'none', borderRadius: '4px', padding: '3px 8px', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
+                                        >
+                                            Remove ✕
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter coupon code"
+                                        value={promoInputCode}
+                                        onChange={(e) => setPromoInputCode(e.target.value.toUpperCase())}
+                                        style={{ flex: 1, padding: '7px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px', textTransform: 'uppercase', fontWeight: 700 }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => handleApplyPromo()}
+                                        style={{ background: '#4f46e5', color: '#fff', border: 'none', padding: '7px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
+                                    >
+                                        Apply
+                                    </button>
+                                </div>
+                            )}
+
+                            {promoMsg && (
+                                <div style={{ fontSize: '11.5px', fontWeight: 700, color: promoMsg.type === 'success' ? '#15803d' : '#dc2626', marginBottom: '6px' }}>
+                                    {promoMsg.text}
+                                </div>
+                            )}
+
+                            {/* Dropdown list of applicable promo codes */}
+                            {showOffersList && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '8px', paddingTop: '8px', borderTop: '1px solid #e0e7ff', maxHeight: '180px', overflowY: 'auto' }}>
+                                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#64748b' }}>Select an applicable offer:</span>
+                                    {availablePromos.map((p) => {
+                                        const isPct = p.discountType === 'percentage' || (p as any).discount_type === 'percentage';
+                                        const val = p.discountValue ?? (p as any).discount_value ?? 10;
+                                        const isApplied = appliedPromoCodesCheckout.includes(p.code);
+
+                                        return (
+                                            <div
+                                                key={p.id || p.code}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    padding: '8px 10px',
+                                                    borderRadius: '6px',
+                                                    background: isApplied ? '#dcfce7' : '#ffffff',
+                                                    border: `1px solid ${isApplied ? '#86efac' : '#cbd5e1'}`,
+                                                    fontSize: '12px'
+                                                }}
+                                            >
+                                                <div>
+                                                    <span style={{ fontWeight: 800, color: '#1e1b4b', fontFamily: 'monospace' }}>{p.code}</span>
+                                                    <span style={{ marginLeft: '6px', color: '#16a34a', fontWeight: 700 }}>
+                                                        {isPct ? `${val}% OFF` : `₹${val} OFF`}
+                                                    </span>
+                                                    {p.minNights && p.minNights > 1 && (
+                                                        <span style={{ marginLeft: '6px', fontSize: '10.5px', color: '#64748b' }}>
+                                                            (Min. {p.minNights} nights)
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleApplyPromo(p.code)}
+                                                    disabled={isApplied}
+                                                    style={{
+                                                        background: isApplied ? '#94a3b8' : '#4f46e5',
+                                                        color: '#fff',
+                                                        border: 'none',
+                                                        padding: '4px 10px',
+                                                        borderRadius: '4px',
+                                                        fontSize: '11px',
+                                                        fontWeight: 700,
+                                                        cursor: isApplied ? 'default' : 'pointer'
+                                                    }}
+                                                >
+                                                    {isApplied ? 'Applied ✓' : 'Apply'}
+                                                </button>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px', marginBottom: '16px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748b' }}>

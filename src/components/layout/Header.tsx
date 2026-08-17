@@ -1,6 +1,7 @@
 import React from 'react';
 import { useBooking } from '../../context/BookingContext';
 import { CurrencyType, ThemeType } from '../../types';
+import { DateRangePicker } from '../../features/rooms/DateRangePicker';
 
 export const Header: React.FC = () => {
     const {
@@ -21,7 +22,7 @@ export const Header: React.FC = () => {
     }, []);
 
     return (
-        <header className="main-header site-header" style={{ width: '100%', background: '#ffffff' }}>
+        <header className="main-header site-header" style={{ width: '100%', background: '#ffffff', position: 'relative', top: 'auto', zIndex: 1002 }}>
             {/* Top Royal Contact Bar */}
             <div style={{ background: '#2c221e', color: '#f5f2eb', padding: '6px 0', borderBottom: '1px solid #3d3029' }}>
                 <div
@@ -37,11 +38,10 @@ export const Header: React.FC = () => {
                         scrollbarWidth: 'none'
                     }}
                 >
-
                     {/* Left: Royal Contact Boxes */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '12px', flexShrink: 1, minWidth: 0, overflow: 'hidden' }}>
                         <a
-                            href={`tel:${hotelData?.phone || '+919876543210'}`}
+                            href={`tel:${(hotelData?.phone || '8118031833').replace(/\s+/g, '')}`}
                             style={{
                                 background: '#3d3029',
                                 border: '1px solid #54443b',
@@ -53,16 +53,16 @@ export const Header: React.FC = () => {
                                 textDecoration: 'none',
                                 display: 'inline-flex',
                                 alignItems: 'center',
-                                gap: '3px',
+                                gap: '4px',
                                 whiteSpace: 'nowrap'
                             }}
                         >
-                            <span style={{ color: '#d97706' }}>📞</span> {hotelData?.phone || '9999999999'}
+                            <span style={{ color: '#d97706' }}>📞</span> {hotelData?.phone || '8118031833'}
                         </a>
 
                         {!isMobile && (
                             <a
-                                href={`mailto:${hotelData?.email || 'support@retrod.in'}`}
+                                href={`mailto:${hotelData?.email || 'support@retrodtech.com'}`}
                                 style={{
                                     background: '#3d3029',
                                     border: '1px solid #54443b',
@@ -77,7 +77,7 @@ export const Header: React.FC = () => {
                                     gap: '4px'
                                 }}
                             >
-                                <span style={{ color: '#d97706' }}>✉️</span> {hotelData?.email || 'support@retrod.in'}
+                                <span style={{ color: '#d97706' }}>✉️</span> {hotelData?.email || 'support@retrodtech.com'}
                             </a>
                         )}
                     </div>
@@ -138,16 +138,14 @@ export const Header: React.FC = () => {
                 </div>
             </div>
 
-            {/* Main Hotel Brand Header Row (Visible on both Desktop and Mobile, maintains 1 logo in top corner) */}
+            {/* Main Hotel Brand Header Row with Logo & Calendar Date Picker in Nav */}
             <div
                 className="main-brand-logo-bar"
                 style={{
                     background: 'var(--card-bg, #ffffff)',
                     borderBottom: '1px solid var(--border-color, #e2e8f0)',
-                    padding: isMobile ? '8px 14px' : '12px 24px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
+                    padding: isMobile ? '8px 12px' : '10px 20px',
+                    position: 'relative'
                 }}
             >
                 <div
@@ -157,9 +155,12 @@ export const Header: React.FC = () => {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         width: '100%',
-                        padding: 0
+                        padding: 0,
+                        gap: '12px',
+                        flexWrap: 'wrap'
                     }}
                 >
+                    {/* Left: Brand Logo & Title */}
                     <div
                         style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
                         onClick={() => setCurrentView('main')}
@@ -173,13 +174,18 @@ export const Header: React.FC = () => {
                             }}
                         />
                         <div>
-                            <div style={{ fontSize: isMobile ? '16px' : '19px', fontWeight: 800, color: 'var(--text-dark, #0f172a)', lineHeight: 1.1 }}>
+                            <div style={{ fontSize: isMobile ? '15px' : '18px', fontWeight: 800, color: 'var(--text-dark, #0f172a)', lineHeight: 1.1 }}>
                                 {hotelData?.name || 'Retrod'}
                             </div>
                             <div style={{ fontSize: '11px', color: 'var(--text-muted, #64748b)', fontWeight: 500 }}>
                                 Official Booking Engine
                             </div>
                         </div>
+                    </div>
+
+                    {/* Right: Date Picker placed in nav bar */}
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <DateRangePicker variant="header" />
                     </div>
                 </div>
             </div>

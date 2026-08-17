@@ -71,11 +71,14 @@ export const EventBookingModal: React.FC = () => {
 
     return (
         <div className="event-booking-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(8px)', zIndex: 1000, overflowY: 'auto', padding: '40px 20px' }}>
-            <div className="container" style={{ maxWidth: '720px', margin: '0 auto', background: '#fff', borderRadius: '16px', padding: '30px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', border: '1.5px solid #cbd5e1' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
-                    <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                        🏛️ Reserve Banquet / Event Hall
-                    </h3>
+            <div className="container" style={{ maxWidth: '720px', margin: '0 auto', background: '#fff', borderRadius: '16px', padding: '30px', boxShadow: '0 25px 50px -12px rgba(212,175,55,0.25)', border: '2px solid #d4af37' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #f1f5f9', paddingBottom: '16px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '24px' }}>🏛️</span>
+                        <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                            Reserve Banquet &amp; Event Hall
+                        </h3>
+                    </div>
                     <button style={{ background: 'none', border: 'none', fontSize: '24px', fontWeight: 800, color: '#64748b', cursor: 'pointer' }} onClick={closeModal}>&times;</button>
                 </div>
 

@@ -18,10 +18,12 @@ export const ModalManager: React.FC = () => {
         case 'edit-occupancy':
             return <OccupancyModal />;
         case 'gallery':
+        case 'photos':
             return <GalleryModal />;
         case 'rate-details':
             return <RateDetailsModal />;
         case 'room-details':
+        case 'details':
             return <RoomDetailsModal />;
         case 'my-booking':
             return <MyBookingModal />;

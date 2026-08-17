@@ -275,6 +275,14 @@ export const SAMPLE_FALLBACK_HOTEL: HotelData = {
                 }
             ]
         }
+    ],
+    addons: [
+        { id: 1, name: 'Airport Pickup & Drop (Sedan)', category: 'Transfer', charge_type: 'Per Stay', price: 1200, tax_pct: 18, is_active: true },
+        { id: 2, name: 'Candlelight Dinner & Wine Setup', category: 'Dining', charge_type: 'Per Stay', price: 2500, tax_pct: 18, is_active: true },
+        { id: 3, name: 'Full Body Ayurvedic Spa Treatment (60 Min)', category: 'Wellness', charge_type: 'Per Person', price: 1800, tax_pct: 18, is_active: true },
+        { id: 4, name: 'Guaranteed Early Check-In (from 9:00 AM)', category: 'Service', charge_type: 'Per Stay', price: 800, tax_pct: 18, is_active: true },
+        { id: 5, name: 'Relaxed Late Check-Out (up to 4:00 PM)', category: 'Service', charge_type: 'Per Stay', price: 800, tax_pct: 18, is_active: true },
+        { id: 6, name: 'Guided City Sightseeing & Heritage Tour', category: 'Activity', charge_type: 'Per Group', price: 2200, tax_pct: 18, is_active: true }
     ]
 };
 
@@ -293,14 +301,8 @@ export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
             if (data.success && data.hotel) {
                 const hotel = data.hotel;
                 if (targetSlug === 'retrod') {
-                    hotel.name = 'Retrod';
+                    hotel.name = hotel.name || 'Retrod';
                     hotel.slug = 'retrod';
-                }
-                if (!hotel.room_types || hotel.room_types.length < 5) {
-                    hotel.room_types = SAMPLE_FALLBACK_HOTEL.room_types;
-                }
-                if (!hotel.amenities || hotel.amenities.length < SAMPLE_FALLBACK_HOTEL.amenities.length) {
-                    hotel.amenities = SAMPLE_FALLBACK_HOTEL.amenities;
                 }
                 return hotel;
             }
@@ -316,7 +318,7 @@ export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
             const props = await pmsRes.json();
             const matchingProp = props.find((p: any) => {
                 const settings = p.booking_engine_settings || {};
-                const pSlug = (settings.slug || p.name || '').toLowerCase();
+                const pSlug = (settings.slug || p.slug || p.name || '').toLowerCase();
                 const pName = (p.name || '').toLowerCase();
 
                 const targetClean = targetSlug.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -324,7 +326,7 @@ export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
                 const pnameClean = pName.replace(/[^a-z0-9]/g, '');
 
                 if (targetClean === pslugClean || targetClean === pnameClean) return true;
-                if (targetClean.length >= 3 && (targetClean.includes(pslugClean) || pslugClean.includes(targetClean) || targetClean.includes(pnameClean) || pnameClean.includes(targetClean))) {
+                if (targetClean.length >= 3 && (pslugClean.includes(targetClean) || pnameClean.includes(targetClean) || targetClean.includes(pslugClean) || targetClean.includes(pnameClean))) {
                     return true;
                 }
                 return false;
@@ -332,15 +334,14 @@ export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
 
             if (matchingProp) {
                 const settings = matchingProp.booking_engine_settings || {};
-                const roomTypes = (settings.custom_room_types || [])
-                    .filter((rt: any) => !rt.name.toLowerCase().includes('ocean view'))
+                let roomTypes = (settings.custom_room_types || [])
                     .map((rt: any, idx: number) => {
                         const matrixRates = (settings.rates_matrix || {})[rt.id] || [];
                         const defaultPlans = [
-                            { id: (idx + 1) * 100 + 1, title: 'EP (Room Only)', description: 'Room accommodation only', single_occupancy_price: rt.basePrice || 3500, single_occupancy_tax: Math.round((rt.basePrice || 3500) * 0.05) },
-                            { id: (idx + 1) * 100 + 2, title: 'CP (Room + Breakfast)', description: 'Room accommodation with breakfast', single_occupancy_price: (rt.basePrice || 3500) + 500, single_occupancy_tax: Math.round(((rt.basePrice || 3500) + 500) * 0.05) },
-                            { id: (idx + 1) * 100 + 3, title: 'MAP (Breakfast + Lunch / Dinner)', description: 'Room accommodation with breakfast & 1 meal', single_occupancy_price: (rt.basePrice || 3500) + 1200, single_occupancy_tax: Math.round(((rt.basePrice || 3500) + 1200) * 0.05) },
-                            { id: (idx + 1) * 100 + 4, title: 'AP (American Plan - 3 Meals)', description: 'Room accommodation with all 3 meals', single_occupancy_price: (rt.basePrice || 3500) + 2000, single_occupancy_tax: Math.round(((rt.basePrice || 3500) + 2000) * 0.05) },
+                            { id: (idx + 1) * 100 + 1, title: 'EP (Room Only)', description: 'Room accommodation only', single_occupancy_price: rt.basePrice || 3500, single_occupancy_tax: Math.round((rt.basePrice || 3500) * 0.05), extra_adult_price: rt.extraAdultPrice || rt.extra_adult_price || 700, extra_child_price: rt.extraChildPrice || rt.extra_child_price || 500 },
+                            { id: (idx + 1) * 100 + 2, title: 'CP (Room + Breakfast)', description: 'Room accommodation with breakfast', single_occupancy_price: (rt.basePrice || 3500) + 500, single_occupancy_tax: Math.round(((rt.basePrice || 3500) + 500) * 0.05), extra_adult_price: rt.extraAdultPrice || rt.extra_adult_price || 700, extra_child_price: rt.extraChildPrice || rt.extra_child_price || 500 },
+                            { id: (idx + 1) * 100 + 3, title: 'MAP (Breakfast + Lunch / Dinner)', description: 'Room accommodation with breakfast & 1 meal', single_occupancy_price: (rt.basePrice || 3500) + 1200, single_occupancy_tax: Math.round(((rt.basePrice || 3500) + 1200) * 0.05), extra_adult_price: rt.extraAdultPrice || rt.extra_adult_price || 700, extra_child_price: rt.extraChildPrice || rt.extra_child_price || 500 },
+                            { id: (idx + 1) * 100 + 4, title: 'AP (American Plan - 3 Meals)', description: 'Room accommodation with all 3 meals', single_occupancy_price: (rt.basePrice || 3500) + 2000, single_occupancy_tax: Math.round(((rt.basePrice || 3500) + 2000) * 0.05), extra_adult_price: rt.extraAdultPrice || rt.extra_adult_price || 700, extra_child_price: rt.extraChildPrice || rt.extra_child_price || 500 },
                         ];
                         const ratePlans = matrixRates.length > 0
                             ? matrixRates.map((mp: any, pIdx: number) => ({
@@ -348,7 +349,9 @@ export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
                                 title: mp.title || `${mp.planCode} Rate Plan`,
                                 description: mp.description || '',
                                 single_occupancy_price: mp.singlePrice || rt.basePrice,
-                                single_occupancy_tax: Math.round((mp.singlePrice || rt.basePrice) * ((mp.taxPct || 12) / 100))
+                                single_occupancy_tax: Math.round((mp.singlePrice || rt.basePrice) * ((mp.taxPct || 12) / 100)),
+                                extra_adult_price: mp.extraAdultPrice || mp.extra_adult_price || rt.extraAdultPrice || rt.extra_adult_price || 700,
+                                extra_child_price: mp.extraChildPrice || mp.extra_child_price || rt.extraChildPrice || rt.extra_child_price || 500
                             }))
                             : defaultPlans;
 
@@ -356,11 +359,9 @@ export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
                             ? rt.images.map((img: any, i: number) => ({ id: i + 1, image_url: typeof img === 'string' ? img : (img.url || img.image_url), caption: rt.name }))
                             : rt.photos && rt.photos.length > 0
                                 ? rt.photos.map((url: string, i: number) => ({ id: i + 1, image_url: url, caption: rt.name }))
-                                : [
-                                    { id: 1, image_url: rt.thumbnailUrl || 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&auto=format&fit=crop', caption: `${rt.name} View` },
-                                    { id: 2, image_url: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&auto=format&fit=crop', caption: `${rt.name} Interior` },
-                                    { id: 3, image_url: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&auto=format&fit=crop', caption: `${rt.name} Bathroom` }
-                                ];
+                                : rt.thumbnailUrl
+                                ? [{ id: 1, image_url: rt.thumbnailUrl, caption: `${rt.name} View` }]
+                                : [];
 
                         return {
                             id: idx + 1,
@@ -372,19 +373,72 @@ export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
                             base_price: rt.basePrice || 3500,
                             starting_price: rt.basePrice || 3500,
                             description: rt.description || `${rt.name} at ${matchingProp.name}`,
-                            thumbnail_url: rt.thumbnailUrl || roomImages[0].image_url,
+                            thumbnail_url: rt.thumbnailUrl || (roomImages.length > 0 ? roomImages[0].image_url : ''),
                             images: roomImages,
                             rate_plans: ratePlans
                         };
                     });
 
-                const propertyAmenities = (settings.amenities || []).map((am: any, idx: number) => ({
+                if (roomTypes.length === 0) {
+                    roomTypes = [
+                        {
+                            id: 1,
+                            name: 'Deluxe King Room',
+                            slug: 'deluxe-king-room',
+                            max_adults: 2,
+                            max_children: 1,
+                            bed_type: 'King Bed',
+                            base_price: 3500,
+                            starting_price: 3500,
+                            description: `Elegantly designed Deluxe Room at ${matchingProp.name} with premium comfort and amenities.`,
+                            thumbnail_url: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=500&auto=format&fit=crop',
+                            images: [{ id: 1, image_url: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=500&auto=format&fit=crop', caption: 'Deluxe King Room' }],
+                            rate_plans: [
+                                { id: 101, title: 'EP (Room Only)', description: 'Room accommodation only', single_occupancy_price: 3500, single_occupancy_tax: 175, extra_adult_price: 700, extra_child_price: 500 },
+                                { id: 102, title: 'CP (Room + Breakfast)', description: 'Room accommodation with complimentary breakfast', single_occupancy_price: 4000, single_occupancy_tax: 200, extra_adult_price: 700, extra_child_price: 500 },
+                                { id: 103, title: 'MAP (Breakfast + 1 Meal)', description: 'Room accommodation with breakfast & 1 meal', single_occupancy_price: 4700, single_occupancy_tax: 235, extra_adult_price: 700, extra_child_price: 500 }
+                            ]
+                        },
+                        {
+                            id: 2,
+                            name: 'Executive Luxury Suite',
+                            slug: 'executive-luxury-suite',
+                            max_adults: 3,
+                            max_children: 2,
+                            bed_type: 'King Bed',
+                            base_price: 5200,
+                            starting_price: 5200,
+                            description: `Spacious Executive Suite at ${matchingProp.name} with panoramic views, living lounge, and luxury privileges.`,
+                            thumbnail_url: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=500&auto=format&fit=crop',
+                            images: [{ id: 2, image_url: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=500&auto=format&fit=crop', caption: 'Executive Suite' }],
+                            rate_plans: [
+                                { id: 201, title: 'EP (Room Only)', description: 'Room accommodation only', single_occupancy_price: 5200, single_occupancy_tax: 260, extra_adult_price: 700, extra_child_price: 500 },
+                                { id: 202, title: 'CP (Room + Breakfast)', description: 'Room accommodation with complimentary breakfast', single_occupancy_price: 5700, single_occupancy_tax: 285, extra_adult_price: 700, extra_child_price: 500 }
+                            ]
+                        }
+                    ];
+                }
+
+                let propertyAmenities = (settings.amenities || []).map((am: any, idx: number) => ({
                     id: idx + 1,
                     name: typeof am === 'string' ? am : am.name,
                     icon_name: typeof am === 'string' ? 'sparkles' : (am.icon_name || 'sparkles')
                 }));
 
-                const addons = (settings.addons || []).map((ad: any, idx: number) => ({
+                if (propertyAmenities.length === 0) {
+                    propertyAmenities = [
+                        { id: 1, name: 'Free High-Speed Wi-Fi', icon_name: 'wifi' },
+                        { id: 2, name: 'Air Conditioning', icon_name: 'wind' },
+                        { id: 3, name: 'Multi-Cuisine Restaurant', icon_name: 'utensils' },
+                        { id: 4, name: 'Swimming Pool', icon_name: 'droplet' },
+                        { id: 5, name: 'Fitness Center', icon_name: 'activity' },
+                        { id: 6, name: '24/7 Front Desk & Room Service', icon_name: 'clock' },
+                        { id: 7, name: 'Complimentary Luggage Assistance', icon_name: 'luggage' },
+                        { id: 8, name: 'Smart Television', icon_name: 'tv' }
+                    ];
+                }
+
+                let addons = (settings.addons || []).map((ad: any, idx: number) => ({
                     id: idx + 1,
                     name: ad.name,
                     category: ad.category || 'Dining',
@@ -394,10 +448,26 @@ export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
                     is_active: ad.isActive !== false
                 }));
 
-                const policies = [
-                    { id: 1, policy_type: 'refund_cancellation', title: 'Refund And Cancellation Policy', content: matchingProp.cancellation_policy || settings.privacy_policy || 'Free cancellation up to 72 hours prior to arrival.' },
-                    { id: 2, policy_type: 'terms', title: 'Terms And Conditions', content: matchingProp.house_rules || settings.terms_and_conditions || `Standard check-in: ${matchingProp.check_in_time || '12:00 PM'}. Check-out: ${matchingProp.check_out_time || '10:00 AM'}.` }
-                ];
+                if (addons.length === 0) {
+                    addons = [
+                        { id: 1, name: 'Airport Pickup & Drop (Sedan)', category: 'Transfer', charge_type: 'Per Stay', price: 1200, tax_pct: 18, is_active: true },
+                        { id: 2, name: 'Candlelight Dinner & Wine Setup', category: 'Dining', charge_type: 'Per Stay', price: 2500, tax_pct: 18, is_active: true },
+                        { id: 3, name: 'Full Body Ayurvedic Spa Treatment (60 Min)', category: 'Wellness', charge_type: 'Per Person', price: 1800, tax_pct: 18, is_active: true },
+                        { id: 4, name: 'Guaranteed Early Check-In (from 9:00 AM)', category: 'Service', charge_type: 'Per Stay', price: 800, tax_pct: 18, is_active: true },
+                        { id: 5, name: 'Relaxed Late Check-Out (up to 4:00 PM)', category: 'Service', charge_type: 'Per Stay', price: 800, tax_pct: 18, is_active: true },
+                        { id: 6, name: 'Guided City Sightseeing & Heritage Tour', category: 'Activity', charge_type: 'Per Group', price: 2200, tax_pct: 18, is_active: true }
+                    ];
+                }
+
+                // Build policies strictly from settings.policies (empty if not configured)
+                const policies = (settings.policies && settings.policies.length > 0)
+                    ? settings.policies.map((pol: any, idx: number) => ({
+                        id: idx + 1,
+                        policy_type: pol.policy_type || 'general',
+                        title: pol.title,
+                        content: pol.content || ''
+                      }))
+                    : [];
 
                 return {
                     id: matchingProp.id || 1,
@@ -405,32 +475,53 @@ export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
                     slug: settings.slug || targetSlug,
                     page_title: settings.page_title || `Welcome to ${matchingProp.name}`,
                     theme_color: settings.theme_color || '#ffc107',
-                    what_makes_special: settings.what_makes_special || matchingProp.what_makes_special || matchingProp.description,
-                    backstory: settings.backstory || matchingProp.backstory,
-                    tagline: settings.tagline || `${matchingProp.name} — Luxury & Comfort Redefined`,
-                    description: matchingProp.description || `Welcome to ${matchingProp.name} – offering luxury accommodations, guest facilities, and fine dining.`,
-                    address: matchingProp.address_line_1 || `${matchingProp.city || 'Centre'}, ${matchingProp.state || ''}`,
-                    city: matchingProp.city || '',
-                    state: matchingProp.state || '',
-                    pincode: matchingProp.postal_code || '',
-                    phone: matchingProp.contact_phone || '9999999999',
-                    email: matchingProp.contact_email || 'support@retrod.in',
-                    whatsapp: settings.whatsapp || matchingProp.contact_phone || '',
-                    check_in_time: matchingProp.check_in_time || '14:00',
-                    check_out_time: matchingProp.check_out_time || '11:00',
-                    google_rating: 4.8,
-                    logo_url: settings.logo_url || matchingProp.logo_url || settings.hero_slides?.[0] || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=120&auto=format&fit=crop',
-                    hero_banner_url: settings.hero_slides?.[0] || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&auto=format&fit=crop',
-                    map_embed_url: matchingProp.google_map_url || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3742.617635678737!2d85.8338251!3d20.2644',
-                    facebook_url: settings.facebook || settings.facebook_url || '#',
-                    instagram_url: settings.instagram || settings.instagram_url || '#',
-                    twitter_url: settings.twitter || settings.twitter_url || '#',
-                    linkedin_url: settings.linkedin || settings.linkedin_url || '#',
-                    images: (settings.hero_slides || []).map((url: string, i: number) => ({
-                        id: i + 1,
-                        image_url: url,
-                        caption: `${matchingProp.name} Banner ${i + 1}`
-                    })),
+                    what_makes_special: settings.what_makes_special || '',
+                    backstory: settings.backstory || '',
+                    tagline: settings.tagline || '',
+                    description: settings.about_description || matchingProp.description || '',
+                    short_description: settings.google_editorial_summary || matchingProp.short_description || settings.about_description || '',
+                    address: matchingProp.address_line_1 || settings.address || '',
+                    city: matchingProp.city || settings.city || '',
+                    state: matchingProp.state || settings.state || '',
+                    pincode: matchingProp.postal_code || settings.pincode || '',
+                    phone: matchingProp.contact_phone || settings.phone || '',
+                    email: matchingProp.contact_email || settings.email || '',
+                    whatsapp: settings.whatsapp || matchingProp.contact_phone || settings.phone || '',
+                    check_in_time: matchingProp.check_in_time || settings.check_in_time || '12:00 PM',
+                    check_out_time: matchingProp.check_out_time || settings.check_out_time || '10:00 AM',
+                    google_rating: settings.google_rating || matchingProp.google_rating || null,
+                    review_count: settings.google_review_count || matchingProp.total_reviews || null,
+                    logo_url: settings.logo_url || matchingProp.logo_url || settings.hero_slides?.[0] || matchingProp.image_url || '',
+                    hero_banner_url: settings.hero_slides?.[0] || matchingProp.image_url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&auto=format&fit=crop',
+                    map_embed_url: settings.google_map_url || matchingProp.google_map_url || '',
+                    facebook_url: settings.facebook_url || settings.facebook || '',
+                    instagram_url: settings.instagram_url || settings.instagram || '',
+                    twitter_url: settings.twitter_url || settings.twitter || '',
+                    linkedin_url: settings.linkedin_url || settings.linkedin || '',
+                    enable_google_reviews: settings.enable_google_reviews ?? true,
+                    // Gallery: merge hero slides + settings.images + property image_url
+                    images: (() => {
+                        const list = [
+                            ...(settings.hero_slides || []).map((url: string, i: number) => ({
+                                id: i + 1,
+                                image_url: url,
+                                caption: `${matchingProp.name} Banner ${i + 1}`
+                            })),
+                            ...(settings.images || []).map((img: any, i: number) => ({
+                                id: (settings.hero_slides?.length || 0) + i + 1,
+                                image_url: typeof img === 'string' ? img : (img.image_url || img.imageUrl || img.url || ''),
+                                caption: (typeof img === 'object' && img.caption) ? img.caption : `${matchingProp.name} Gallery ${i + 1}`
+                            })).filter((img: any) => img.image_url),
+                        ];
+                        if (list.length === 0) {
+                            const defaultImgs = [
+                                matchingProp.image_url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&auto=format&fit=crop',
+                                'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1200&auto=format&fit=crop'
+                            ];
+                            return defaultImgs.map((url, i) => ({ id: i + 1, image_url: url, caption: `${matchingProp.name} View ${i + 1}` }));
+                        }
+                        return list;
+                    })(),
                     amenities: propertyAmenities,
                     promo_codes: settings.promos || matchingProp.promo_codes || [],
                     room_types: roomTypes,
@@ -445,26 +536,20 @@ export async function fetchHotelDataFromApi(slug: string): Promise<HotelData> {
         console.warn('PMS direct fallback notice:', err2);
     }
 
-    if (targetSlug === 'retrod' || targetSlug.includes('frontend-beige-theta-65') || targetSlug.includes('vercel')) {
+    const whitelist = ['retrod', 'demo', 'hotelxyz', 'hotel-xyz', 'hotel', 'frontend-beige-theta-65'];
+    const isWhitelisted = whitelist.some(w => targetSlug === w || targetSlug.includes(w));
+
+    if (isWhitelisted) {
         return SAMPLE_FALLBACK_HOTEL;
     }
 
-    const cleanTitle = targetSlug.includes('frontend') ? 'Retrod' : targetSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-
-    return {
-        ...SAMPLE_FALLBACK_HOTEL,
-        name: cleanTitle === 'Frontend Beige Theta 65' ? 'Retrod' : cleanTitle,
-        slug: targetSlug,
-        tagline: `Retrod — Luxury & Comfort Redefined`,
-        description: `Welcome to Retrod – premier accommodations and world-class hospitality.`,
-        email: 'support@retrod.in',
-        phone: '9999999999'
-    };
+    // Return null to signify that this hotel is not set up
+    return null;
 }
 
 export async function submitEventRequestApi(payload: any) {
     try {
-        const res = await fetch('/api/v1/event-requests/', {
+        const res = await fetch(getApiEndpointUrl('/api/v1/event-requests/'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -480,7 +565,7 @@ export const submitMeetingWeddingRequestApi = submitEventRequestApi;
 
 export async function submitRestaurantRequestApi(payload: any) {
     try {
-        const res = await fetch('/api/v1/restaurant-requests/', {
+        const res = await fetch(getApiEndpointUrl('/api/v1/restaurant-requests/'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -493,7 +578,7 @@ export async function submitRestaurantRequestApi(payload: any) {
 
 export async function lookupBookingsApi(emailOrRef: string) {
     try {
-        const res = await fetch(`/api/v1/bookings/${emailOrRef}/`);
+        const res = await fetch(getApiEndpointUrl(`/api/v1/bookings/${emailOrRef}/`));
         return await res.json();
     } catch (err: any) {
         return { success: false, error: err.message };

@@ -177,8 +177,8 @@ body {
 .main-header {
     background-color: #ffffff;
     border-bottom: 1px solid var(--border-color);
-    position: sticky;
-    top: 0;
+    position: relative;
+    top: auto;
     z-index: 100;
     box-shadow: var(--shadow-sm);
 }
@@ -661,13 +661,28 @@ body {
 
 .marquee-track {
     display: flex;
-    gap: 32px;
+    gap: 28px;
     width: max-content;
-    animation: smoothMarquee 45s linear infinite;
+    animation: smoothMarquee 60s linear infinite;
+    will-change: transform;
 }
 
 .marquee-track:hover {
     animation-play-state: paused;
+}
+
+.review-rect-card {
+    border: 2px solid #d4af37 !important;
+    border-radius: 16px !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 18px rgba(212, 175, 55, 0.18), 0 2px 6px rgba(0,0,0,0.04) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.review-rect-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 10px 28px rgba(212, 175, 55, 0.32) !important;
+    border-color: #f59e0b !important;
 }
 
 @media (max-width: 768px) {
@@ -696,7 +711,13 @@ body {
 
     .marquee-track {
         gap: 16px !important;
-        animation-duration: 55s !important;
+        animation-duration: 75s !important;
+    }
+
+    .review-rect-card {
+        width: 270px !important;
+        min-height: 150px !important;
+        padding: 14px 16px !important;
     }
 
     .review-circle-card {
@@ -3497,9 +3518,21 @@ body.dark-theme .main-footer {
 }
 
 /* --- BANQUET ROOM CARD DECORATION --- */
+.banquet-card-container {
+    border: 2px solid #d4af37 !important;
+    box-shadow: 0 6px 24px rgba(212, 175, 55, 0.22) !important;
+    transition: all 0.3s ease;
+}
+
+.banquet-card-container:hover {
+    border-color: #f59e0b !important;
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.32) !important;
+    transform: translateY(-2px);
+}
+
 .banquet-contact-card {
     background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
-    border-left: 4px solid #d97706;
+    border: 2px solid #d4af37;
     border-radius: 8px;
     padding: 16px;
     margin-top: 12px;
@@ -5520,9 +5553,9 @@ body.dark-theme .info-tip-box {
 
 /* ── FOOTER BASE STYLES ── */
 .main-footer {
-    background: #000000;
-    color: #ffffff;
-    padding: 50px 0 20px 0;
+    background: #1c1917;
+    color: #f5f5f4;
+    padding: 24px 0 12px 0;
     position: relative;
     overflow: hidden;
     max-width: 100%;
@@ -5531,9 +5564,9 @@ body.dark-theme .info-tip-box {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
-    gap: 40px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 16px;
 }
 
 .footer-col {
@@ -5597,139 +5630,80 @@ body.dark-theme .info-tip-box {
 }
 
 .cal-nav-btn {
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    color: #0f172a;
+    background: #b45309;
+    border: 1.5px solid #d4af37;
+    color: #ffffff;
     width: 32px;
     height: 32px;
     border-radius: 8px;
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 900;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 2px 6px rgba(180, 83, 9, 0.35);
     transition: all 0.2s ease;
 }
 
 .cal-nav-btn:not(:disabled):hover {
-    background: #16a34a;
+    background: #92400e;
     color: #ffffff;
-    border-color: #16a34a;
+    border-color: #fde047;
 }
 
 .cal-nav-btn:disabled {
     opacity: 0.35;
     cursor: not-allowed;
     background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #94a3b8;
 }
-
 .cal-day {
     position: relative;
-    height: 40px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 13px;
     font-weight: 600;
     border-radius: 8px;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     user-select: none;
     cursor: pointer;
+    color: #1e293b;
 }
 
 .cal-day:hover:not(.disabled) {
-    background: #e2e8f0;
+    background: #fef3c7;
+    color: #92400e;
+    font-weight: 700;
 }
 
 .cal-day.disabled {
-    color: #94a3b8 !important;
-    background: #f1f5f9 !important;
+    color: #cbd5e1 !important;
+    background: transparent !important;
     cursor: not-allowed !important;
-    position: relative;
-    user-select: none;
-    opacity: 0.65;
-}
-
-/* Red diagonal cut mark line over past dates */
-.cal-day.disabled::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 12%;
-    width: 76%;
-    height: 2px;
-    background: #ef4444;
-    transform: translateY(-50%) rotate(-40deg);
-    z-index: 3;
-    border-radius: 1px;
-    box-shadow: 0 0 2px rgba(239, 68, 68, 0.4);
+    opacity: 0.4;
 }
 
 .cal-day.check-in,
-.cal-day.range-start {
-    background: #16a34a !important;
-    color: #ffffff !important;
-    font-weight: 800;
-    border-radius: 8px 0 0 8px !important;
-    box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3);
-    z-index: 2;
-}
-
+.cal-day.range-start,
 .cal-day.check-out,
 .cal-day.range-end {
-    background: #16a34a !important;
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
     color: #ffffff !important;
-    font-weight: 800;
-    border-radius: 0 8px 8px 0 !important;
-    box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3);
-    z-index: 2;
-}
-
-.cal-day.check-in.check-out {
+    font-weight: 800 !important;
     border-radius: 8px !important;
+    box-shadow: 0 3px 10px rgba(180, 83, 9, 0.35);
+    z-index: 2;
 }
 
 .cal-day.in-range {
-    background: #dcfce7 !important;
-    color: #15803d !important;
-    font-weight: 700;
-    border-radius: 0 !important;
-    position: relative;
-}
-
-/* Animated connecting line flowing across selected stay dates */
-.cal-day.in-range::after,
-.cal-day.range-start::after,
-.cal-day.range-end::after {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #16a34a, #4ade80, #16a34a);
-    background-size: 200% 100%;
-    animation: rangeLineFlow 1.8s linear infinite;
-    z-index: 1;
-}
-
-.cal-day.range-start::after {
-    left: 50%;
-}
-
-.cal-day.range-end::after {
-    right: 50%;
-}
-
-@keyframes rangeLineFlow {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    100% {
-        background-position: 200% 50%;
-    }
+    background: #fef3c7 !important;
+    color: #92400e !important;
+    font-weight: 700 !important;
+    border-radius: 4px !important;
 }
 
 /* ── BANQUET & EVENT BOOKING RESPONSIVE STYLES ── */
@@ -5772,9 +5746,9 @@ body.dark-theme .info-tip-box {
 .main-header {
     background-color: var(--card-bg, #ffffff);
     border-bottom: 1px solid var(--border-color, #e2e8f0);
-    position: sticky;
-    top: 0;
-    z-index: 900;
+    position: relative;
+    top: auto;
+    z-index: 100;
     box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.06));
     width: 100%;
     box-sizing: border-box;
@@ -6462,69 +6436,71 @@ body.dark-theme .info-tip-box {
 
 .cart-checkout-arrow-btn:hover {
     transform: scale(1.12) rotate(4deg) !important;
-    background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%) !important;
-    box-shadow: 0 6px 22px rgba(34, 197, 94, 0.75) !important;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    box-shadow: 0 6px 22px rgba(180, 83, 9, 0.65) !important;
 }
 
 .cart-checkout-arrow-btn:active {
     transform: scale(0.95) !important;
 }
 
-/* ── Floating Sticky Cart Bar & Drawer Panel Centering ── */
-.trapezoid-cart-wrapper {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    z-index: 1000 !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: flex-end !important;
-    pointer-events: none !important;
+/* ── Top-Right Floating Cart & Slide-Over Animations ── */
+@keyframes slideInRight {
+    0% {
+        transform: translateX(60px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
-.trapezoid-cart-bar {
-    pointer-events: auto !important;
-    position: relative !important;
-    margin: 0 auto !important;
-    width: 90% !important;
-    max-width: 540px !important;
-    background: #140b07 !important;
-    color: #ffffff !important;
-    padding: 12px 24px !important;
-    border-radius: 22px 22px 0 0 !important;
-    box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.5) !important;
-    border-top: 2px solid #22c55e !important;
-    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    animation: slideUpSmooth 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+@keyframes fadeInUp {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
-.cart-drawer-panel {
-    position: fixed !important;
-    bottom: 60px !important;
-    left: 50% !important;
-    transform: translate(-50%, 0) !important;
-    width: 90% !important;
-    max-width: 540px !important;
-    margin: 0 auto !important;
+.top-right-floating-cart button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 26px rgba(212, 175, 55, 0.45), 0 3px 10px rgba(0,0,0,0.14) !important;
 }
 
-@media (max-width: 768px) {
-    .trapezoid-cart-bar {
-        width: 94% !important;
-        max-width: 100% !important;
-        padding: 10px 16px !important;
-        border-radius: 18px 18px 0 0 !important;
+.top-right-floating-cart button:active {
+    transform: translateY(0);
+}
+
+.floating-scroll-top-btn:hover {
+    transform: scale(1.1) translateY(-2px);
+    background: #92400e !important;
+    border-color: #ffffff !important;
+}
+
+.floating-scroll-top-btn:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 900px) {
+    .luxury-footer-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 20px !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .luxury-footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
     }
 
-    .cart-drawer-panel {
-        width: 94% !important;
-        max-width: 100% !important;
-        padding: 16px 14px !important;
+    .luxury-footer-grid > div {
+        border-left: none !important;
+        padding-left: 0 !important;
     }
 }

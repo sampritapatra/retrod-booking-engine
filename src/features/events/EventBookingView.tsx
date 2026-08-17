@@ -143,8 +143,11 @@ export const EventBookingView: React.FC = () => {
 
             <div className="event-booking-grid">
                 {/* FORM PANEL */}
-                <form onSubmit={handleSubmit} style={{ background: '#fff', border: '1.5px solid #cbd5e1', borderRadius: '16px', padding: '28px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
-                    <div style={{ marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
+                <form onSubmit={handleSubmit} style={{ background: '#fff', border: '2px solid #d4af37', borderRadius: '16px', padding: '28px', boxShadow: '0 8px 30px rgba(212,175,55,0.18)' }}>
+                    <div style={{ marginBottom: '24px', borderBottom: '1px solid #f1f5f9', paddingBottom: '16px' }}>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'linear-gradient(135deg, #d4af37 0%, #b45309 100%)', color: '#fff', fontSize: '11px', fontWeight: 800, padding: '3px 10px', borderRadius: '6px', letterSpacing: '0.5px', textTransform: 'uppercase', marginBottom: '8px' }}>
+                            ✨ Banquet &amp; Event Booking
+                        </div>
                         <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
                             🏛️ Reserve Banquet &amp; Event Hall
                         </h2>
@@ -349,8 +352,8 @@ export const EventBookingView: React.FC = () => {
                 </form>
 
                 {/* INVOICE & COST ESTIMATE SUMMARY PANEL */}
-                <div style={{ background: '#fff', border: '1.5px solid #cbd5e1', borderRadius: '16px', padding: '24px', height: 'fit-content', position: 'sticky', top: '20px' }}>
-                    <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#0f172a', marginBottom: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+                <div style={{ background: '#fff', border: '2px solid #d4af37', borderRadius: '16px', padding: '24px', height: 'fit-content', position: 'sticky', top: '20px', boxShadow: '0 8px 30px rgba(212,175,55,0.18)' }}>
+                    <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#0f172a', marginBottom: '16px', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px' }}>
                         📄 Event Detailed Estimate
                     </h4>
 
