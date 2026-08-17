@@ -588,9 +588,52 @@ export const Footer: React.FC = () => {
                         <div style={{ height: '1.2px', flex: 1, background: 'linear-gradient(90deg, rgba(212, 175, 55, 0.45), transparent)' }}></div>
                     </div>
 
-                    {/* Bottom Attribution */}
-                    <div style={{ textAlign: 'center', fontSize: '12.5px', color: '#a8a29e', fontWeight: 500, letterSpacing: '0.4px' }}>
-                        Powered by <strong style={{ color: '#d4af37', fontWeight: 800 }}>Retrod</strong> &bull; Direct Booking System
+                    {/* Bottom Attribution & Small Footer */}
+                    <div className="small_foter" style={{ width: '100%' }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: '10px 0px',
+                                color: '#ffffff',
+                                fontSize: '15px',
+                                backgroundColor: '#000000',
+                                borderRadius: '5px',
+                                width: '100%',
+                            }}
+                        >
+                            <div style={{ textAlign: 'center' }}>
+                                &copy; {new Date().getFullYear()} All Rights Reserved Powered by
+                                <a
+                                    href="https://retrodtech.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        textDecoration: 'none',
+                                        color: '#fff',
+                                        display: 'inline-flex',
+                                        flexDirection: 'column',
+                                        verticalAlign: 'middle',
+                                        marginLeft: '5px',
+                                        textAlign: 'left',
+                                    }}
+                                >
+                                    <strong style={{ fontSize: '18px', lineHeight: 1 }}>Retrod.</strong>
+                                    <small
+                                        style={{
+                                            fontSize: '8px',
+                                            color: '#ffffff',
+                                            fontFamily: 'arial',
+                                            letterSpacing: '1px',
+                                            paddingLeft: '17px',
+                                        }}
+                                    >
+                                        Travel Tech
+                                    </small>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
