@@ -589,44 +589,51 @@ export const Footer: React.FC = () => {
                     </div>
 
                     {/* Bottom Attribution & Small Footer */}
-                    <div className="small_foter" style={{ width: '100%' }}>
+                    <div className="small_foter" style={{ width: '100%', marginTop: '4px' }}>
                         <div
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                padding: '10px 0px',
-                                color: '#ffffff',
-                                fontSize: '15px',
-                                backgroundColor: '#000000',
-                                borderRadius: '5px',
+                                padding: '8px 16px 16px 16px',
+                                color: '#d6d3d1',
+                                fontSize: '13px',
+                                fontWeight: 500,
+                                letterSpacing: '0.3px',
                                 width: '100%',
                             }}
                         >
-                            <div style={{ textAlign: 'center' }}>
-                                &copy; {new Date().getFullYear()} All Rights Reserved Powered by
+                            <div style={{ textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: '4px', lineHeight: 1.4 }}>
+                                <span>&copy; {new Date().getFullYear()} All Rights Reserved Powered by</span>
                                 <a
                                     href="https://retrodtech.com/"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     style={{
                                         textDecoration: 'none',
-                                        color: '#fff',
+                                        color: '#d4af37',
                                         display: 'inline-flex',
                                         flexDirection: 'column',
                                         verticalAlign: 'middle',
-                                        marginLeft: '5px',
+                                        marginLeft: '4px',
                                         textAlign: 'left',
+                                        transition: 'all 0.2s ease',
                                     }}
+                                    title="Retrod Travel Tech"
                                 >
-                                    <strong style={{ fontSize: '18px', lineHeight: 1 }}>Retrod.</strong>
+                                    <strong style={{ fontSize: '16px', lineHeight: 1, color: '#ffffff', letterSpacing: '-0.2px' }}>
+                                        Retrod<span style={{ color: '#d4af37' }}>.</span>
+                                    </strong>
                                     <small
                                         style={{
                                             fontSize: '8px',
-                                            color: '#ffffff',
-                                            fontFamily: 'arial',
+                                            color: '#d4af37',
+                                            fontFamily: 'system-ui, sans-serif',
                                             letterSpacing: '1px',
-                                            paddingLeft: '17px',
+                                            textTransform: 'uppercase',
+                                            fontWeight: 700,
+                                            lineHeight: 1,
+                                            marginTop: '1px',
                                         }}
                                     >
                                         Travel Tech
